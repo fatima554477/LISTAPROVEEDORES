@@ -41,69 +41,80 @@ define("__ROOT1__", dirname(dirname(__FILE__)));
 	
 	
 	
-	public function contactospro($id){
+      public function contactospro($id){
     $conn = $this->db();
-    
+
     // Traemos solo el último registro (mayor id) de ese proveedor
-    $sql = "SELECT NOMBRE_CONTACTO_PROVEE 
-            FROM 02contactosprovee 
-            WHERE idRelacion = '".mysqli_real_escape_string($conn, $id)."' 
-            ORDER BY id DESC 
+    $sql = "SELECT NOMBRE_CONTACTO_PROVEE
+            FROM 02contactosprovee
+            WHERE idRelacion = '".mysqli_real_escape_string($conn, $id)."'
+            ORDER BY id DESC
             LIMIT 1";
-    
+
     $query = mysqli_query($conn, $sql);
     $resultado = '';
 
     if($row = mysqli_fetch_assoc($query)){
         $resultado  = $row['NOMBRE_CONTACTO_PROVEE'];
-        
+
     }
-		
+
     return $resultado;
 }
 
 
-	public function contactoCELpro($id){
+        public function contactoCELpro($id){
     $conn = $this->db();
-    
+
     // Traemos solo el último registro (mayor id) de ese proveedor
-    $sql = "SELECT CEL_CONTACTO_PROVEE 
-            FROM 02contactosprovee 
-            WHERE idRelacion = '".mysqli_real_escape_string($conn, $id)."' 
-            ORDER BY id DESC 
+    $sql = "SELECT CEL_CONTACTO_PROVEE
+            FROM 02contactosprovee
+            WHERE idRelacion = '".mysqli_real_escape_string($conn, $id)."'
+            ORDER BY id DESC
             LIMIT 1";
-    
+
     $query = mysqli_query($conn, $sql);
     $resultado = '';
 
-    if($row = mysqli_fetch_assoc($query)){
-        $resultado  = $row['CEL_CONTACTO_PROVEE'];
-        
+    if($row3 = mysqli_fetch_assoc($query)){
+        $resultado  = $row3['CEL_CONTACTO_PROVEE'];
+
     }
 
     return $resultado;
 }
 
-	public function convenionuevo($id){
+
+public function convenionuevo($id) {
     $conn = $this->db();
-    
-    // Traemos solo el último registro (mayor id) de ese proveedor
-    $sql = "SELECT CONVENIO_PROVEEDOR 
-            FROM 02metodopago 
-            WHERE idRelacion = '".mysqli_real_escape_string($conn, $id)."' 
-            ORDER BY id DESC 
-            LIMIT 1";
-    
-    $query = mysqli_query($conn, $sql);
-    $resultado = '';
 
-    if($row = mysqli_fetch_assoc($query)){
-        $resultado  = $row['CONVENIO_PROVEEDOR'];
-        
+    $sql = "SELECT CONVENIO_PROVEEDOR
+            FROM 02metodopago
+            WHERE idRelacion = '" . mysqli_real_escape_string($conn, $id) . "'
+            ORDER BY id DESC
+            LIMIT 1";
+
+    $resultado = 'NO'; // valor por defecto
+
+    if ($query = mysqli_query($conn, $sql)) {
+        if ($row = mysqli_fetch_assoc($query)) {
+            $valorConvenio = isset($row['CONVENIO_PROVEEDOR']) ? trim(strtoupper($row['CONVENIO_PROVEEDOR'])) : '';
+
+            // Acepta varios formatos posibles
+            if (in_array($valorConvenio, ['SI'])) {
+                $resultado = 'SI';
+            } elseif (in_array($valorConvenio, ['NO'])) {
+                $resultado = 'NO';
+            }
+        }
     }
 
     return $resultado;
 }
+
+
+
+
 
 	public function datos_convenio($idRelacion){
 		$conn = $this->db();
@@ -133,7 +144,7 @@ if($search['P_NOMBRE_FISCAL_RS_EMPRESA']!=""){
 $sWhere2.="  02direccionproveedor1.P_NOMBRE_FISCAL_RS_EMPRESA LIKE '%".$search['P_NOMBRE_FISCAL_RS_EMPRESA']."%' OR ";}
 
 if($search['CONVENIO_PROVEEDOR']!=""){
-$sWhere2.="  02direccionproveedor1.CONVENIO_PROVEEDOR LIKE '%".$search['CONVENIO_PROVEEDOR']."%' OR ";}
+$sWhere2.="  02metodopago.CONVENIO_PROVEEDOR LIKE '%".$search['CONVENIO_PROVEEDOR']."%' OR ";}
 
 if($search['P_RFC_MTDP']!=""){
 $sWhere2.="02direccionproveedor1.P_RFC_MTDP LIKE '%".$search['P_RFC_MTDP']."%' OR ";}

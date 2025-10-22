@@ -26,7 +26,7 @@ if ($action == "ajax") {
     $DEPARTAMENTO = !empty($_POST["DEPARTAMENTO2"]) ? $_POST["DEPARTAMENTO2"] : "DEFAULT";	
     $nombreTabla = "SELECT * FROM `08listap1filtroDes`, 08altaeventosfiltroPLA WHERE 08listap1filtroDes.id = 08altaeventosfiltroPLA.idRelacion";
     $altaeventos = "listadop";
-    $tables = "02usuarios,02direccionproveedor1,02productosservicios,02otrosproveedores";
+    $tables = "02usuarios,02direccionproveedor1,02productosservicios,02otrosproveedores,02metodopago";
     
 
     $nommbrerazon = isset($_POST["nommbrerazon"]) ? $_POST["nommbrerazon"] : ""; 
@@ -170,7 +170,7 @@ if ($action == "ajax") {
 			
             if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="email_1" value="<?php echo $email; ?>"></td>
             <?php } 
-         if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="CONVENIO_PROVEEDOR" value="<?php echo $CONVENIO_PROVEEDOR; ?>"></td>
+         if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="CONVENIO_PROVEEDOR_1" value="<?php echo $CONVENIO_PROVEEDOR; ?>"></td>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"></td>
             <?php } 
