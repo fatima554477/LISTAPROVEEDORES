@@ -41,6 +41,7 @@ if ($action == "ajax") {
     $PAIS_SERVICIO = isset($_POST["PAIS_SERVICIO"]) ? $_POST["PAIS_SERVICIO"] : ""; 
     $PCONTACTADO_POR = isset($_POST["PCONTACTADO_POR"]) ? $_POST["PCONTACTADO_POR"] : ""; 
     $PRODUCTO_O_SERVICIO_9 = isset($_POST["PRODUCTO_O_SERVICIO_9"]) ? $_POST["PRODUCTO_O_SERVICIO_9"] : ""; 
+    $CONVENIO_PROVEEDOR = isset($_POST["CONVENIO_PROVEEDOR"]) ? $_POST["CONVENIO_PROVEEDOR"] : ""; 
 
 
     $per_page = intval($_POST["per_page"]);
@@ -61,6 +62,7 @@ if ($action == "ajax") {
         "PAIS_SERVICIO" => $PAIS_SERVICIO,
         "PCONTACTADO_POR" => $PCONTACTADO_POR,
         "PRODUCTO_O_SERVICIO_9" => $PRODUCTO_O_SERVICIO_9,
+        "CONVENIO_PROVEEDOR" => $CONVENIO_PROVEEDOR,
         "per_page" => $per_page,
         "query" => $query,
         "offset" => $offset
@@ -130,7 +132,9 @@ if ($action == "ajax") {
 			
             if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">EMAIL</th>
             <?php } 
-			            if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">CONVENIO</th>
+		   if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">HAY CONVENIO?</th>
+            <?php }
+		  if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">CONVENIO</th>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">PRODUCTO  PRINCIPAL<br> DEL PROVEEDOR</th>
             <?php } 
@@ -166,8 +170,8 @@ if ($action == "ajax") {
 			
             if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="email_1" value="<?php echo $email; ?>"></td>
             <?php } 
-			if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="convenio" value="<?php echo $convenio; ?>"></td>
-            <?php }
+         if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="CONVENIO_PROVEEDOR" value="<?php echo $CONVENIO_PROVEEDOR; ?>"></td>
+            <?php } 
             if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"></td>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"P_TELEFONO_1_EMPRESA",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="P_TELEFONO_1_EMPRESA" value="<?php echo $P_TELEFONO_1_EMPRESA; ?>"></td>
@@ -192,10 +196,12 @@ if ($action == "ajax") {
     <tbody>
     <?php
         $finales = 0;
-        foreach ($datos as $key => $row) {
+       foreach ($datos as $key => $row) {
             $query_producots = $database->todos_productosservicios($row['IDDDDDD']);
             $query_contactos = $database->contactospro($row['IDDDDDD']);
             $query_contactoCEL = $database->contactoCELpro($row['IDDDDDD']);
+            $datos_convenio = $database->datos_convenio($row['IDDDDDD']);
+            $datos_convemio = $database->convenionuevo($row['IDDDDDD']);
   
             
     ?>
@@ -234,9 +240,21 @@ if ($action == "ajax") {
             if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['email']);?></td>
             <?php }
 			
-		 if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo $regreso = "<a target='_blank'  href='includes/archivos/".$idRelacion['CONVENIO_DOPROVEEDOR']."'>ver</a><br>";</td>
-            <?php } 
+				   if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($datos_convemio); ?></td>
+            <?php }
 			
+               if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;">
+                    <?php
+                        $linkConvenio = '';
+                        if (!empty($datos_convenio) && !empty($datos_convenio['CONVENIO_DOPROVEEDOR'])) {
+                            $archivoConvenio = htmlspecialchars($datos_convenio['CONVENIO_DOPROVEEDOR']);
+                            $rutaConvenio = "includes/archivos/".$archivoConvenio;
+                            $linkConvenio = "<a target='_blank' href='".$rutaConvenio."'>VISUALIZAR!</a><br>";
+                        }
+                        echo $linkConvenio;
+                    ?>
+                </td>
+            <?php }
 			
 			
 			

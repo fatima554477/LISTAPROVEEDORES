@@ -84,7 +84,26 @@ define("__ROOT1__", dirname(dirname(__FILE__)));
     return $resultado;
 }
 
+	public function convenionuevo($id){
+    $conn = $this->db();
+    
+    // Traemos solo el último registro (mayor id) de ese proveedor
+    $sql = "SELECT CONVENIO_PROVEEDOR 
+            FROM 02metodopago 
+            WHERE idRelacion = '".mysqli_real_escape_string($conn, $id)."' 
+            ORDER BY id DESC 
+            LIMIT 1";
+    
+    $query = mysqli_query($conn, $sql);
+    $resultado = '';
 
+    if($row = mysqli_fetch_assoc($query)){
+        $resultado  = $row['CONVENIO_PROVEEDOR'];
+        
+    }
+
+    return $resultado;
+}
 
 	public function datos_convenio($idRelacion){
 		$conn = $this->db();
@@ -106,10 +125,16 @@ define("__ROOT1__", dirname(dirname(__FILE__)));
 		$per_page=$search['per_page'];
 		
 		$sWhere="  ";
-		$sWhere2="";$sWhere3="";if($search['nommbrerazon']!=""){
+$sWhere2="";$sWhere3="";if($search['nommbrerazon']!=""){
 $sWhere2.="  02usuarios.nommbrerazon LIKE '%".$search['nommbrerazon']."%' OR ";}
+
+
 if($search['P_NOMBRE_FISCAL_RS_EMPRESA']!=""){
 $sWhere2.="  02direccionproveedor1.P_NOMBRE_FISCAL_RS_EMPRESA LIKE '%".$search['P_NOMBRE_FISCAL_RS_EMPRESA']."%' OR ";}
+
+if($search['CONVENIO_PROVEEDOR']!=""){
+$sWhere2.="  02direccionproveedor1.CONVENIO_PROVEEDOR LIKE '%".$search['CONVENIO_PROVEEDOR']."%' OR ";}
+
 if($search['P_RFC_MTDP']!=""){
 $sWhere2.="02direccionproveedor1.P_RFC_MTDP LIKE '%".$search['P_RFC_MTDP']."%' OR ";}
 
