@@ -130,6 +130,8 @@ if ($action == "ajax") {
 			
             if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">EMAIL</th>
             <?php } 
+			            if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">CONVENIO</th>
+            <?php } 
             if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">PRODUCTO  PRINCIPAL<br> DEL PROVEEDOR</th>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"P_TELEFONO_1_EMPRESA",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">TELEFONO PRINCIPAL<br> DEL PROVEEDOR</th>
@@ -164,6 +166,8 @@ if ($action == "ajax") {
 			
             if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="email_1" value="<?php echo $email; ?>"></td>
             <?php } 
+			if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="convenio" value="<?php echo $convenio; ?>"></td>
+            <?php }
             if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"></td>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"P_TELEFONO_1_EMPRESA",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="P_TELEFONO_1_EMPRESA" value="<?php echo $P_TELEFONO_1_EMPRESA; ?>"></td>
@@ -192,6 +196,7 @@ if ($action == "ajax") {
             $query_producots = $database->todos_productosservicios($row['IDDDDDD']);
             $query_contactos = $database->contactospro($row['IDDDDDD']);
             $query_contactoCEL = $database->contactoCELpro($row['IDDDDDD']);
+  
             
     ?>
      		 <tr style="background:#FFFFFF">
@@ -227,7 +232,15 @@ if ($action == "ajax") {
 	   if($database->plantilla_filtro($nombreTabla,"TELEFONO_CONTACPROVEE",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($query_contactoCEL); ?></td>
             <?php }
             if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['email']);?></td>
+            <?php }
+			
+		 if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo $regreso = "<a target='_blank'  href='includes/archivos/".$idRelacion['CONVENIO_DOPROVEEDOR']."'>ver</a><br>";</td>
             <?php } 
+			
+			
+			
+			
+			
             if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($query_producots); ?></td>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"P_TELEFONO_1_EMPRESA",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['P_TELEFONO_1_EMPRESA']);?></td>
@@ -243,7 +256,7 @@ if ($action == "ajax") {
                     <input type="button" name="view" value="MODIFICAR" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-info btn-xs view_LP" />
                 </td>
             <?php } 
-            if($database->variablespermisos('','listadoDUPLI ','ver')=='si'){ ?>
+            if($database->variablespermisos('','listadoDUPLI','ver')=='si'){ ?>
                 <td>
                     <input type="button" name="view" value="DUPLICAR" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-info btn-xs view_DUPLICAR" />
                 </td>

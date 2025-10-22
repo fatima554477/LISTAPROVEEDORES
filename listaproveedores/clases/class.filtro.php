@@ -39,6 +39,8 @@ define("__ROOT1__", dirname(dirname(__FILE__)));
 		return $PRODUCTO_O_SERVICIO_9;
 	}
 	
+	
+	
 	public function contactospro($id){
     $conn = $this->db();
     
@@ -56,9 +58,11 @@ define("__ROOT1__", dirname(dirname(__FILE__)));
         $resultado  = $row['NOMBRE_CONTACTO_PROVEE'];
         
     }
-
+		
     return $resultado;
 }
+
+
 	public function contactoCELpro($id){
     $conn = $this->db();
     
@@ -79,6 +83,21 @@ define("__ROOT1__", dirname(dirname(__FILE__)));
 
     return $resultado;
 }
+
+
+
+	public function datos_convenio($idRelacion){
+		$conn = $this->db();
+		$variable2 = "select * from 02metodopago where idRelacion = '".$idRelacion."' and CONVENIO_PROVEEDOR  = 'SI'  ";
+		$query2 = mysqli_query($conn,$variable2);
+		$row2 = mysqli_fetch_array($query2, MYSQLI_ASSOC);
+		return $row2;
+	}
+
+
+
+
+
 
 	
 	//STATUS_EVENTO,NOMBRE_CORTO_EVENTO,NOMBRE_EVENTO
