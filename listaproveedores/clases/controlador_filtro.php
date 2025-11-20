@@ -170,8 +170,24 @@ if ($action == "ajax") {
 			
             if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="email_1" value="<?php echo $email; ?>"></td>
             <?php } 
-         if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="CONVENIO_PROVEEDOR_1" value="<?php echo $CONVENIO_PROVEEDOR; ?>"></td>
-            <?php } 
+
+if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?>
+             </br><td style="background:#c9e8e8">
+				
+			<select class="form-select mb-3" aria-label="Default select example" id="CONVENIO_PROVEEDOR_1" onchange="load(1);">
+			<option value="">TODOS</option>
+			<option value="SI" <?php if($_POST['CONVENIO_PROVEEDOR']=='SI'){echo 'selected';} ?>>SI</option>
+			<option value="NO" <?php if($_POST['CONVENIO_PROVEEDOR']=='NO'){echo 'selected';} ?>>NO</option>
+		
+								
+			</select>
+</td>
+<?php } 
+if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><!--<input type="text" class="form-control" id="P_NOMBRE_FISCAL_RS_EMPRESA_2" value="<?php 
+echo $convenio; ?>">--></td>
+<?php }
+			
+			
             if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"></td>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"P_TELEFONO_1_EMPRESA",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="P_TELEFONO_1_EMPRESA" value="<?php echo $P_TELEFONO_1_EMPRESA; ?>"></td>
@@ -188,6 +204,7 @@ if ($action == "ajax") {
                 <td style="background:#c9e8e8"></td><?php } 
             if($database->variablespermisos('','listadoP ','borrar')=='si'){ ?>
                 <td style="background:#c9e8e8"></td><?php } ?>
+				
         </tr>			
     </thead>
     <?php 	if ($numrows < 0) { ?>
@@ -242,6 +259,8 @@ if ($action == "ajax") {
 			
 				   if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($datos_convemio); ?></td>
             <?php }
+			
+			
 			
                if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;">
                     <?php

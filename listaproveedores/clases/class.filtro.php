@@ -94,16 +94,15 @@ public function convenionuevo($id) {
             ORDER BY id DESC
             LIMIT 1";
 
-    $resultado = 'NO'; // valor por defecto
+    $resultado = "<span style='color:#b0b0b0;'>SIN INFORMACIÓN</span>"; // gris clarito
 
     if ($query = mysqli_query($conn, $sql)) {
         if ($row = mysqli_fetch_assoc($query)) {
             $valorConvenio = isset($row['CONVENIO_PROVEEDOR']) ? trim(strtoupper($row['CONVENIO_PROVEEDOR'])) : '';
 
-            // Acepta varios formatos posibles
-            if (in_array($valorConvenio, ['SI'])) {
+            if ($valorConvenio === 'SI') {
                 $resultado = 'SI';
-            } elseif (in_array($valorConvenio, ['NO'])) {
+            } elseif ($valorConvenio === 'NO') {
                 $resultado = 'NO';
             }
         }
@@ -111,6 +110,7 @@ public function convenionuevo($id) {
 
     return $resultado;
 }
+
 
 
 
@@ -144,7 +144,8 @@ if($search['P_NOMBRE_FISCAL_RS_EMPRESA']!=""){
 $sWhere2.="  02direccionproveedor1.P_NOMBRE_FISCAL_RS_EMPRESA LIKE '%".$search['P_NOMBRE_FISCAL_RS_EMPRESA']."%' OR ";}
 
 if($search['CONVENIO_PROVEEDOR']!=""){
-$sWhere2.="  02metodopago.CONVENIO_PROVEEDOR LIKE '%".$search['CONVENIO_PROVEEDOR']."%' OR ";}
+$valorConvenio = $this->mysqli->real_escape_string($search['CONVENIO_PROVEEDOR']);
+$sWhere2.="  EXISTS (SELECT 1 FROM 02metodopago WHERE 02metodopago.idRelacion = 02usuarios.id AND 02metodopago.CONVENIO_PROVEEDOR LIKE '%".$valorConvenio."%') OR ";}
 
 if($search['P_RFC_MTDP']!=""){
 $sWhere2.="02direccionproveedor1.P_RFC_MTDP LIKE '%".$search['P_RFC_MTDP']."%' OR ";}
@@ -189,13 +190,13 @@ IF($sWhere2!=""){
 		}ELSE{
 		$sWhere3  = '';	
 		}
-		$tables = '
-		02usuarios 
-		left join 02direccionproveedor1 ON 02usuarios.id = 02direccionproveedor1.idRelacion 
-		left join 02productosservicios ON 02usuarios.id = 02productosservicios.idRelacion
-		/* left join  02otrosproveedores ON 02usuarios.id = 02otrosproveedores.idRelacion */ ';
-		//02usuario.id
-		$sWhere3.="order by nommbrerazon asc";
+     $tables = '
+                02usuarios
+                left join 02direccionproveedor1 ON 02usuarios.id = 02direccionproveedor1.idRelacion
+                left join 02productosservicios ON 02usuarios.id = 02productosservicios.idRelacion
+                /* left join  02otrosproveedores ON 02usuarios.id = 02otrosproveedores.idRelacion */ ';
+                //02usuario.id
+                $sWhere3.="order by nommbrerazon asc";
 		$sql="SELECT $campos,02usuarios.id as IDDDDDD FROM  $tables $sWhere $sWhere3 LIMIT  $offset,$per_page";
 		
 		$query=$this->mysqli->query($sql);
