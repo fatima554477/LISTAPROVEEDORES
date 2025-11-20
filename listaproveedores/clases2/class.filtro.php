@@ -80,6 +80,47 @@ define("__ROOT1__", dirname(dirname(__FILE__)));
     return $resultado;
 }
 
+
+public function convenionuevo($id) {
+    $conn = $this->db();
+
+    $sql = "SELECT CONVENIO_PROVEEDOR
+            FROM 02metodopago
+            WHERE idRelacion = '" . mysqli_real_escape_string($conn, $id) . "'
+            ORDER BY id DESC
+            LIMIT 1";
+
+    $resultado = "<span style='color:#b0b0b0;'>SIN INFORMACIÓN</span>"; // gris clarito
+
+    if ($query = mysqli_query($conn, $sql)) {
+        if ($row = mysqli_fetch_assoc($query)) {
+            $valorConvenio = isset($row['CONVENIO_PROVEEDOR']) ? trim(strtoupper($row['CONVENIO_PROVEEDOR'])) : '';
+
+            if ($valorConvenio === 'SI') {
+                $resultado = 'SI';
+            } elseif ($valorConvenio === 'NO') {
+                $resultado = 'NO';
+            }
+        }
+    }
+
+    return $resultado;
+}
+
+
+
+
+
+
+	public function datos_convenio($idRelacion){
+		$conn = $this->db();
+		$variable2 = "select * from 02metodopago where idRelacion = '".$idRelacion."' and CONVENIO_PROVEEDOR  = 'SI'  ";
+		$query2 = mysqli_query($conn,$variable2);
+		$row2 = mysqli_fetch_array($query2, MYSQLI_ASSOC);
+		return $row2;
+	}
+	
+
 	public function direccionproveedor1($id){
 		$conn = $this->db();
 		$direccionproveedor1 = 'select * from 02direccionproveedor1 where idRelacion = "'.$id.'" ';

@@ -135,6 +135,13 @@ if($database->plantilla_filtro($nombreTabla,"usuario",$altaeventos,$DEPARTAMENTO
 if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="text-align:center; text-transform: uppercase;">EMAIL</th>
 <?php } ?>
 <?php 
+if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="text-align:center; text-transform: uppercase;">HAY CONVENIO?</th>
+<?php } ?>
+<?php 
+if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="text-align:center; text-transform: uppercase;">CONVENIO</th>
+<?php } ?>
+
+<?php 
 if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="text-align:center; text-transform: uppercase;">PRODUCTO  PRINCIPAL<br> DEL PROVEEDOR</th>
 <?php } ?>
 <?php 
@@ -196,6 +203,16 @@ if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=
 echo $email; ?>">--></td>
 <?php } ?>
 <?php  
+if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><!--<input type="text" class="form-control" id="email_2" value="<?php 
+echo $email; ?>">--></td>
+<?php } ?>
+<?php  
+if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><!--<input type="text" class="form-control" id="email_2" value="<?php 
+echo $email; ?>">--></td>
+<?php } ?>
+
+
+<?php  
 if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="background:#c9e8e8;text-align:center"><input type="text" class="form-control" id="PRODUCTO_O_SERVICIO_9_1_2" value="<?php 
 echo $PRODUCTO_O_SERVICIO_9; ?>"></td>
 <?php } ?>
@@ -246,6 +263,8 @@ echo $nommbrerazon; ?>">--></td>
 			$productosservicios = $database->productosservicios($row['IDDDDDD']);
 			            $query_contactos = $database->contactospro($row['IDDDDDD']);
             $query_contactoCEL = $database->contactoCELpro($row['IDDDDDD']);
+			            $datos_convenio = $database->datos_convenio($row['IDDDDDD']);
+            $datos_convemio = $database->convenionuevo($row['IDDDDDD']);
 			?>
      		 <tr style="background:#FFFFFF">
 		 						<td>
@@ -287,6 +306,23 @@ echo $nommbrerazon; ?>">--></td>
 
 <?php  if($database->plantilla_filtro($nombreTabla,"email",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['email']);?></td>
 <?php } ?>
+
+<?php  if($database->plantilla_filtro($nombreTabla,"CONVENIO_PROVEEDOR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($datos_convemio); ?></td>
+<?php } ?>
+
+<?php  if($database->plantilla_filtro($nombreTabla,"convenio",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;">
+                    <?php
+                        $linkConvenio = '';
+                        if (!empty($datos_convenio) && !empty($datos_convenio['CONVENIO_DOPROVEEDOR'])) {
+                            $archivoConvenio = htmlspecialchars($datos_convenio['CONVENIO_DOPROVEEDOR']);
+                            $rutaConvenio = "includes/archivos/".$archivoConvenio;
+                            $linkConvenio = "<a target='_blank' href='".$rutaConvenio."'>VISUALIZAR!</a><br>";
+                        }
+                        echo $linkConvenio;
+                    ?>
+                </td>
+<?php } ?>
+
 <?php  if($database->plantilla_filtro($nombreTabla,"PRODUCTO_O_SERVICIO_9",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['PRODUCTO_O_SERVICIO_9']); ?></td>
 <?php } ?>
 
