@@ -382,19 +382,24 @@ if ($rfc != '') {
 	$empresaquery = mysqli_query($conn, 'SELECT * FROM `02empresarelacion` where `02empresarelacion`.`idRelacionP` = "'.$ID.'" ') or die('P156'.mysqli_error($conn));
 	$rowuem = mysqli_fetch_array($empresaquery);
 
-	mysqli_query($conn, "update 02usuarios set
-	contrasenia = '".$contrasenia."' , 
-	email = '".$email."',
-	nommbrerazon = '".$nommbrerazon."',
-	usuario = '".$usuario."' 	
-	where id = '".$ID."' ; ") or die('P156'.mysqli_error($conn));
+        $nommbrerazon = trim($nommbrerazon);
+        $P_NOMBRE_FISCAL_RS_EMPRESA = trim($P_NOMBRE_FISCAL_RS_EMPRESA);
+        $P_RFC_MTDP = trim($P_RFC_MTDP);
+
+        mysqli_query($conn, "update 02usuarios set
+        contrasenia = '".$contrasenia."' ,
+        email = '".$email."',
+        nommbrerazon = '".$nommbrerazon."',
+        usuario = '".$usuario."'
+        where id = '".$ID."' ; ") or die('P156'.mysqli_error($conn));
 
 	
 
-	mysqli_query($conn, "update 02direccionproveedor1 set
-	P_NOMBRE_FISCAL_RS_EMPRESA = '".$P_NOMBRE_FISCAL_RS_EMPRESA."', 
-	P_RFC_MTDP = '".$P_RFC_MTDP."' 
-	where idRelacion = '".$ID."' ; ") or die('P156'.mysqli_error($conn));
+        mysqli_query($conn, "update 02direccionproveedor1 set
+        P_NOMBRE_COMERCIAL_EMPRESA = '".$nommbrerazon."',
+        P_NOMBRE_FISCAL_RS_EMPRESA = '".$P_NOMBRE_FISCAL_RS_EMPRESA."',
+        P_RFC_MTDP = '".$P_RFC_MTDP."'
+        where idRelacion = '".$ID."' ; ") or die('P156'.mysqli_error($conn));
 
 
 
@@ -443,57 +448,75 @@ if ($rfc != '') {
 		RETURN "ACTUALIZADO";
 	}
 	}
-	public function duplica($id){
-		$conn = $this->db();
-	
-		$query = "select * from 02usuarios where id=".$id." limit 1 ";
-		$queryejecuta = mysqli_query($conn,$query);
-		$row = mysqli_fetch_array($queryejecuta);
+        public function duplica($id){
+                $conn = $this->db();
 
-		$insert = "insert into 02usuarios (
-		prefijo,
-		usuario, 
-		nommbrerazon, 
+                $id = (int)$id;
 
-		contrasenia, 
-		email, 
-		PERMISOS) values (
-		'AdminPR',
-		'".$row['usuario']."' , 
-		'".$row['nommbrerazon']."' , 
- 
-		'".$row['contrasenia']."' , 
-		'".$row['email']."', 
-		'PROVEEDORES'
-		); ";
-		mysqli_query($conn,$insert) or die('P160'.mysqli_error($conn));
-		$idwebc = mysqli_insert_id($conn);
+                $query = "select * from 02usuarios where id=".$id." limit 1 ";
+                $queryejecuta = mysqli_query($conn,$query);
+                $row = mysqli_fetch_array($queryejecuta, MYSQLI_ASSOC);
+
+                if(!$row){
+                        echo "NO SE ENCONTRÓ EL PROVEEDOR";
+                        return;
+                }
+
+                $usuario = mysqli_real_escape_string($conn, $row['usuario']);
+                $nommbrerazon = mysqli_real_escape_string($conn, $row['nommbrerazon']);
+                $contrasenia = mysqli_real_escape_string($conn, $row['contrasenia']);
+                $email = mysqli_real_escape_string($conn, $row['email']);
+
+                $insert = "insert into 02usuarios (
+                prefijo,
+                usuario,
+                nommbrerazon,
+
+                contrasenia,
+                email,
+                PERMISOS) values (
+                'AdminPR',
+                '".$usuario."' ,
+                '".$nommbrerazon."' ,
+
+                '".$contrasenia."' ,
+                '".$email."',
+                'PROVEEDORES'
+                ); ";
+                mysqli_query($conn,$insert) or die('P160'.mysqli_error($conn));
+                $idwebc = mysqli_insert_id($conn);
 
 
 
 //02direccionproveedor1
 
-		$query2 = "select * from 02direccionproveedor1 where idRelacion=".$id." ";
-		$queryejecuta2 = mysqli_query($conn,$query2);
-		$row2 = mysqli_fetch_array($queryejecuta2);
+                $query2 = "select * from 02direccionproveedor1 where idRelacion=".$id." limit 1";
+                $queryejecuta2 = mysqli_query($conn,$query2);
+                $row2 = mysqli_fetch_array($queryejecuta2, MYSQLI_ASSOC);
 
-		mysqli_query($conn,"insert into 02direccionproveedor1 ( 
-		P_NOMBRE_COMERCIAL_EMPRESA, 
-		P_NOMBRE_FISCAL_RS_EMPRESA, 
-		idRelacion, 
-		P_RFC_MTDP) values (
-		'".$row2['P_NOMBRE_COMERCIAL_EMPRESA']."' ,
-		'".$row2['P_NOMBRE_FISCAL_RS_EMPRESA']."' ,
-		'".$idwebc."',
-		'".$row2['P_RFC_MTDP']."'
-		); ") or die('P160'.mysqli_error($conn));
-		
-		echo  "PROVEEDOR DUPLICADO";
+                if($row2){
+                        $nombreComercial = mysqli_real_escape_string($conn, $row2['P_NOMBRE_COMERCIAL_EMPRESA']);
+                        $razonSocial = mysqli_real_escape_string($conn, $row2['P_NOMBRE_FISCAL_RS_EMPRESA']);
+                        $rfc = mysqli_real_escape_string($conn, $row2['P_RFC_MTDP']);
+
+                        mysqli_query($conn,"insert into 02direccionproveedor1 (
+                P_NOMBRE_COMERCIAL_EMPRESA,
+                P_NOMBRE_FISCAL_RS_EMPRESA,
+                idRelacion,
+                P_RFC_MTDP) values (
+                '".$nombreComercial."' ,
+                '".$razonSocial."' ,
+                '".$idwebc."',
+                '".$rfc."'
+                ); ") or die('P160'.mysqli_error($conn));
+                }
+
+                echo  "PROVEEDOR DUPLICADO";
 
 
 
-		
-	}
+
+        }
 	
 	
 	
