@@ -8,6 +8,10 @@
 
 
 $connecDB = $proveedoresC->db();
+$defaultWhere = " ";
+if (!isset($_SESSION['where'])) {
+        $_SESSION['where'] = $defaultWhere;
+}
 $item_per_page = 7;
 if(isset($_POST["page"])){
 	$page_number = filter_var($_POST["page"], FILTER_SANITIZE_NUMBER_INT, FILTER_FLAG_STRIP_HIGH);
@@ -20,10 +24,15 @@ $position = (($page_number-1) * $item_per_page);
 $BORRAR = ISSET($_POST["BORRAR"])?$_POST["BORRAR"]:'';
 $BUSQUEDA = ISSET($_POST["BUSCAR"])?$_POST["BUSCAR"]:'';
 
+if ($BUSQUEDA !== '') {
+    $BUSQUEDA = mysqli_real_escape_string($connecDB, trim($BUSQUEDA));
+}
+
+
 if($BUSQUEDA !=''){
-	
-	$_SESSION['where'] = " and (P_RFC_MTDP LIKE '%".$BUSQUEDA."%' OR nommbrerazon  LIKE '%".$BUSQUEDA."%' ) ";
-	
+
+        $_SESSION['where'] = " and (P_RFC_MTDP LIKE '%".$BUSQUEDA."%' OR nommbrerazon  LIKE '%".$BUSQUEDA."%' ) ";
+
 }
 elseif($BORRAR!=''){
 UNSET($_SESSION['where']);
@@ -31,33 +40,7 @@ $_SESSION['where'] = " ";
 
 }
 
-/*
-$VARSQL = "select *,02usuarios.id AS IDDD from 02usuarios, 02direccionproveedor1, 02metodopago WHERE 02usuarios.id = 02direccionproveedor1.idRelacion and 02usuarios.id = 02metodopago.idRelacion ".$_SESSION['where']." order by nommbrerazon ASC LIMIT $position, $item_per_page";*/
 
-/*echo $VARSQL = "select *,02usuarios.id AS IDDD from 
-02usuarios, 02direccionproveedor1, 02metodopago, 02otrosproveedores
-WHERE 02usuarios.id = 02direccionproveedor1.idRelacion and 
-02usuarios.id = 02metodopago.idRelacion  group by 02usuarios.id ".$_SESSION['where']." order by nommbrerazon ASC LIMIT $position, $item_per_page ;";*/
-
-/*
-select *,02usuarios.id AS IDDD from 02usuarios, 02direccionproveedor1, 02metodopago WHERE 02usuarios.id = 02direccionproveedor1.idRelacion and 02usuarios.id = 02metodopago.idRelacion AND (P_RFC_MTDP LIKE '%AGU910620RZ8%' OR nommbrerazon LIKE '%AGU910620RZ8%' or PRODUCTO_O_SERVICIO_9 LIKE '%AGU910620RZ8%' ) order by nommbrerazon ASC LIMIT 0, 10 ;Unknown column 'PRODUCTO_O_SERVICIO_9' in 'where clause' */
-
-$VARSQL = "select *,02usuarios.id AS IDDD from 
-02usuarios, 02direccionproveedor1 WHERE
-02usuarios.id = 02direccionproveedor1.idRelacion
-
-".$_SESSION['where']." order by 02usuarios.id DESC LIMIT $position, $item_per_page ;";
-/*echo $VARSQL = "select *,02usuarios.id AS IDDD from 
-02usuarios left join 02direccionproveedor1
-on 02usuarios.id = 02direccionproveedor1.idRelacion
-
-
-left join  02metodopago
-on 02usuarios.id = 02metodopago.idRelacion 
-left join 02otrosproveedores
-
-
- group by 02usuarios.id ".$_SESSION['where']." order by nommbrerazon ASC LIMIT $position, $item_per_page ;";*/
 
 
 $results = mysqli_query($connecDB,$VARSQL)or die('ppppp2'.mysqli_error($connecDB));

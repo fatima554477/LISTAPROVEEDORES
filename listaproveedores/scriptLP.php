@@ -144,24 +144,52 @@ $(document).on('click', '.view_BORRARLP', function(){
 
 
 		
-		$("#enviarLISTADO").click(function(){
-		var formulario = $("#LISTADOform").serializeArray();
-			$.ajax({
-			type: "POST",
-			url: "listaproveedores/controladorLP.php",
-			data: formulario,
-		}).done(function(respuesta){
-			if($.trim(respuesta) == 'Ingresado'){
-		$("#mensajeLISTADO").html(respuesta);
-		$('#target9').hide("linear");
-		$("#reset").load(location.href + " #reset");		
-			}else{
-		$("#mensajeLISTADO").html("<span id='ERROR' >"+respuesta+"</span>");
-		$("#reset").load(location.href + " #reset");
+$("#enviarLISTADO").click(function(){
 
-			}
-			});
-	});
+    var formulario = $("#LISTADOform").serializeArray();
+
+    $.ajax({
+        type: "POST",
+        url: "listaproveedores/controladorLP.php",
+        data: formulario,
+    }).done(function(respuesta){
+		$("#LISTADOform")[0].reset();
+
+        if($.trim(respuesta) == 'Ingresado'){
+
+            // Mostrar mensaje de éxito
+            $("#mensajeLISTADO").html(respuesta);
+
+            // Ocultar sección
+            //$('#target9').hide("linear");
+
+            // LIMPIAR FORMULARIO
+            
+
+            // Refrescar zona
+            $("#reset").load(location.href + " #reset");     
+
+            // DESAPARECER MENSAJE DESPUÉS DE 2 SEGUNDOS
+            setTimeout(function(){
+                $("#mensajeLISTADO").fadeOut(300, function(){
+                    $(this).html('').show();
+                });
+            },2000);
+
+        } else {
+
+            // Mostrar error
+            $("#mensajeLISTADO").html("<span id='ERROR'>"+respuesta+"</span>");
+
+            $("#reset").load(location.href + " #reset");
+
+        }
+
+    });
+
+});
+
+
 
 
 
@@ -169,31 +197,67 @@ $(document).on('click', '.view_BORRARLP', function(){
 
 $("#enviarLISTADOYENVIARCORREO").click(function(){
 	
-	var formulario = $("#LISTADOform").serializeArray();
-	formulario.push(
-		{ name: "mandacorreo2", value: 'si' }
-	);
+    var formulario = $("#LISTADOform").serializeArray();
+    formulario.push(
+        { name: "mandacorreo2", value: 'si' }
+    );
 	
-	$.ajax({
-		url:'listaproveedores/controladorLP.php',
-		method:"POST",
-		data:formulario, 
-		beforeSend:function(){  
-			$('#mensajeLISTADO').html('cargando'); 
-		}, 	
-		success:function(data){
-			if($.trim(data)=='Ingresado' || $.trim(data)=='ACTUALIZADO'){
-					$('#dataModal').modal('hide');
-					$("#reset").load(location.href + " #reset");
-					$("#mensajeLISTADO").html("<span id='ACTUALIZADO' >"+data+"</span>");
-			}else if($.trim(data)=='ACTUALIZADO Y CORREO ENVIADO'){
-					$("#mensajeLISTADO").html("<span id='ACTUALIZADO' >"+data+"</span>");
-			}else{
-					$("#mensajeLISTADO").html("<span id='ERROR' >"+data+"</span>");
-			}
-		}  
-	});
+    $.ajax({
+        url: 'listaproveedores/controladorLP.php',
+        method: "POST",
+        data: formulario, 
+        beforeSend: function(){  
+            $('#mensajeLISTADO').html('cargando...'); 
+        }, 	
+        success: function(data){
+
+            if($.trim(data) == 'Ingresado' || $.trim(data) == 'ACTUALIZADO'){
+
+                $('#dataModal').modal('hide');
+
+                // ✅ Limpia formulario
+                $("#LISTADOform")[0].reset();
+
+                // ✅ Refrescar listado
+                $("#reset").load(location.href + " #reset");
+
+                // ✅ Mostrar mensaje
+                $("#mensajeLISTADO").html("<span id='ACTUALIZADO'>"+data+"</span>");
+
+                // ✅ Ocultar mensaje en 2 seg
+                setTimeout(function(){
+                    $("#mensajeLISTADO").fadeOut(300, function(){
+                        $(this).html('').show();
+                    });
+                },2000);
+
+            }
+            else if($.trim(data) == 'ACTUALIZADO Y CORREO ENVIADO'){
+
+                // ✅ Limpia también
+                $("#LISTADOform")[0].reset();
+
+                $("#mensajeLISTADO").html("<span id='ACTUALIZADO'>"+data+"</span>");
+
+                setTimeout(function(){
+                    $("#mensajeLISTADO").fadeOut(300, function(){
+                        $(this).html('').show();
+                    });
+                },2000);
+
+            }
+            else{
+
+                // ❌ Error — no se limpia el form
+                $("#mensajeLISTADO").html("<span id='ERROR'>"+data+"</span>");
+
+            }
+
+        }  
+    });
+
 });
+
 
 
 

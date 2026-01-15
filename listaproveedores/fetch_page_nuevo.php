@@ -38,36 +38,30 @@
 	<button  class="btn btn-sm btn-outline-success px-5" type="button" onclick="load(1);" >BUSCAR</button>
 </td>
 
-<td width="30%" align="center">
+<td width="30%" align="center" style="text-transform: uppercase;">
 	<span>PLANTILLA</span>
 	<?php
 	$encabezado = '';$option='';
 	$queryper = $proveedoresC->desplegablesfiltro('listadop','');
-	$encabezado = '<select class="form-select mb-3" id="DEPARTAMENTO2WE" required="" onchange="load(1);">
+	$encabezado = '<select class="form-select mb-3" id="DEPARTAMENTO2WE" required="" onchange="load2(1);" style="text-transform: uppercase;">
 	<option value="">SELECCIONA UNA OPCIÓN</option>';
-	/*linea para multiples colores*/
+
 	$fondos = array("fff0df","f4ffdf","dfffed","dffeff","dfe8ff","efdfff","ffdffd","efdfff","ffdfe9");
 	$num = 0;
-	/*linea para multiples colores*/	
+
 	while($row1 = mysqli_fetch_array($queryper))
 	{
-	/*linea para multiples colores*/
-	if($num==8){$num=0;}else{$num++;}
-	/*linea para multiples colores*/		
-	$select='';
-	if($_SESSION['DEPARTAMENTO']==$row1['nombreplantilla']){$select = "selected";};
+		if($num==8){$num=0;}else{$num++;}
 
-	$option .= '<option style="background: #'./*linea para multiples colores*/$fondos[$num]./*linea para multiples colores*/'" '.$select.' value="'.$row1['nombreplantilla'].'">'.$row1['nombreplantilla'].'</option>';
+		$select='';
+		if($_SESSION['DEPARTAMENTO']==$row1['nombreplantilla']){$select = "selected";}
+
+		$option .= '<option style="background:#'.$fondos[$num].'; text-transform: uppercase;" '.$select.' value="'.$row1['nombreplantilla'].'">'.$row1['nombreplantilla'].'</option>';
 	}
 	echo $encabezado.$option.'</select>';			
-	?>	
-
-
-
-
-
-
+	?>
 </td>
+
 
 </tr>
 </table>
