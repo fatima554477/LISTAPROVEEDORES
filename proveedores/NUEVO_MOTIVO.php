@@ -1,0 +1,111 @@
+
+<div id="content"> 
+
+
+			<hr/>
+			<strong>  <p class="mb-0 text-uppercase">
+<img src="includes/contraer31.png" id="mostrar30" style="cursor:pointer;"/>
+<img src="includes/contraer41.png" id="ocultar30" style="cursor:pointer;"/>&nbsp;&nbsp;&nbsp;NUEVO MOTIVO PARA LA CALIFICACIÓN</p><div  id="mensajeDOCUmotivo2"><div class="progress" style="width: 25%;">
+									<div class="progress-bar" role="progressbar" style="width: <?php echo $ROWCATEGORIAS; ?>%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><?php echo $ROWCATEGORIAS; ?>%</div></div>
+								</div></div></strong>
+	       
+            <div id="target30" style="display:block;"  class="content2 scroll">
+			
+
+		
+			<form class="row g-3 needs-validation was-validated" novalidate="" id="MOTIVONUEVOform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" >
+			
+			<?php if($conexion->variablespermisos('','NUEVO_MOTIVO','guardar')=='si'){ ?>
+
+							<table id="example2" class="table table-striped table-bordered" style="background:#e3effa">
+					
+
+								<thead>
+									<tr style="text-align:center;">
+										<strong><th style="background:#e3effa">MOTIVO:</td></strong><br>
+							
+										<td style="background:#e3effa"><input style="width:500px;" type="text" class="form-control" id="validationCustom03" required=""  value="<?php echo $nuevo_motivo; ?>" name="nuevo_motivo"></td>
+
+                                   </tr>
+		
+                                    </table><table>
+									
+                  <input name="MOTIVO_NUEVO" type="hidden" value="MOTIVO_NUEVO">
+               
+               <tr>
+          
+            <th>
+			
+
+<button class="btn btn-sm btn-outline-success px-5"  type="button" id="enviarMOTIVOdocu">GUARDAR</button> <div style="
+
+    color: #f5f5f5;
+    text-shadow: 1px 1px 1px #919191,
+        1px 2px 1px #919191,
+        1px 3px 1px #919191,
+        1px 4px 1px #919191,
+        1px 5px 1px #919191,
+        1px 6px 1px #919191,
+        1px 7px 1px #919191,
+        1px 8px 1px #919191,
+        1px 9px 1px #919191,
+        1px 10px 1px #919191,
+    1px 18px 6px rgba(16,16,16,0.4),
+    1px 22px 10px rgba(16,16,16,0.2),
+    1px 25px 35px rgba(16,16,16,0.2),
+    1px 30px 60px rgba(16,16,16,0.4);"
+
+
+id="mensajeDOCUmotivo"/></th>
+                      
+                 </tr> <?php } ?>
+      
+               </table>  
+               </form>
+
+      
+               <?php
+$querycontras = $proveedoresC->listadonuevomotivo();
+?>
+
+<br />
+<div class='table-responsive'>
+<div align='right'>
+</div>
+<br />
+<div id='employee_table'>
+<tbody= 'font-style:italic;'>
+<table class="table table-striped table-bordered" style="width:100%"  id='resetNUEVOM' name='resetNUEVOM'>
+<tr style="text-align:center">
+<td width="70%"style="background:#c9e8e8">NUEVO MOTIVO</td>  
+
+</tr>
+<?php
+while($row = mysqli_fetch_array($querycontras))
+{
+?>                                                     
+
+
+<tr style="background:#f5f9fc;text-align:center">                                    
+
+<td  width="70%"><?php echo $row["nuevo_motivo"]; ?></td>
+<td><?php if($conexion->variablespermisos('','NUEVO_MOTIVO','modificar')=='si'){ ?>
+<input type="button" name="view" value="MODIFICAR" id="<?php echo $row["id"]; ?>" class="btn btn-info btn-xs view_dataNUEV" />
+<?php } ?></td>
+<td>
+<?php if($conexion->variablespermisos('','NUEVO_MOTIVO','borrar')=='si'){ ?>
+
+<input type="button" name="view2" value="BORRAR" id="<?php echo $row["id"]; ?>" class="btn btn-info btn-xs view_databorraNUEV" />
+<?php } ?></td>
+</tr>
+<?php
+}
+?>
+</table>
+</tbody>
+</div>
+</div>
+</div>   
+	 
+			   
+					

@@ -1,0 +1,124 @@
+<div id="content">     
+			<hr/>
+		<strong>	  <p class="mb-0 text-uppercase" ><img src="includes/contraer51.png" id="mostrar8" style="cursor:pointer;"/>
+<img src="includes/contraer61.png" id="ocultar8" style="cursor:pointer;"/>&nbsp;&nbsp;&nbsp;CONTACTOS ADMINIDTRATIVOS</p></strong></div>
+<div  id="mensajeNOMBRECONTACTO2">
+<div class="progress" style="width: 25%;">
+									<div class="progress-bar" role="progressbar" style="width: <?php echo $contactosventasproveedoresporcentaje2 ; ?>%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><?php echo $contactosventasproveedoresporcentaje2 ; ?>%</div></div></div>
+							
+	        <div id="target8" style="display:block;" class="content2">
+        <div class="card">
+          <div class="card-body">
+                      <form class="row g-3 needs-validation" id="NOMBRECONTACTO2form" novalidate>
+                   
+                   
+                  <div class="col-md-4"style="background:#fef5e7"><p  style="background:#CEF6E3"> <strong> NOMBRE DEL CONTACTO DE CONTABILIDAD O FINANZAS: </strong></p><br>
+                     <strong><label for="validationCustom02" class="form-label">NOMBRE DEL CONTACTO :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NOMBRE_DEL_CONTACTO_CF; ?>" required="" name="P_NOMBRE_DEL_CONTACTO_CF">
+                     <div class="valid-feedback">Looks good!</div>
+                   </div>
+                   <div class="col-md-4"style="background:#d4f6c8"><p  style="background:#CEF6E3"> <strong>DATOS DE LA PERSONA A QUIEN SE LE NOTIFICARÁN LOS PAGOS:</strong></p>
+                     <strong><label for="validationCustom02" class="form-label">NOMBRE DEL CONTACTO :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NOMBRE_DEL_CONTACTO_NP; ?>" required="" name="P_NOMBRE_DEL_CONTACTO_NP">
+                     <div class="valid-feedback">Looks good!</div>
+                   </div> 
+                   <div class="col-md-4"style="background:#fbeee6"><p  style="background:#CEF6E3"> <strong> DATOS DE LA PERSONA QUE SUBIRÁ O ENVIARÁ DOCUMENTOS DE LA EMPRESA:</strong></p>
+                     <strong><label for="validationCustom02" class="form-label">NOMBRE DEL CONTACTO :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NOMBRE_DEL_CONTACTO_EDE; ?>" required="" name="P_NOMBRE_DEL_CONTACTO_EDE">
+                     <div class="valid-feedback">Looks good!</div>
+                   </div>
+
+                   <div class="col-md-4"style="background:#fef5e7">
+                     <strong><label for="validationCustom02" class="form-label">NÚMERO DE CEL DEL CONTACTO :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NUMERO_CEL_CONTACTO_CF; ?>" required="" name="P_NUMERO_CEL_CONTACTO_CF">
+                     <div class="valid-feedback">Looks good!</div>
+                   
+                   </div>
+                   <div class="col-md-4"style="background:#d4f6c8">
+                     <strong><label for="validationCustom02" class="form-label">NÚMERO DE CEL DEL CONTACTO :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NUMERO_CEL_CONTACTO_NP; ?>" required="" name="P_NUMERO_CEL_CONTACTO_NP">
+                     <div class="valid-feedback">Looks good!</div>
+                   
+                   </div>
+                   <div class="col-md-4"style="background:#fbeee6">
+                     <strong><label for="validationCustom02" class="form-label">NÚMERO DE CEL DEL CONTACTO :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NUMERO_CEL_CONTACTO_EDE; ?>" required="" name="P_NUMERO_CEL_CONTACTO_EDE">
+                     <div class="valid-feedback">Looks good!</div>
+                   
+                   </div>
+                   <div class="col-md-4"style="background:#fef5e7">
+                     <strong><label for="validationCustom02" class="form-label">TELEFONO DE OFICINA :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NUMERO_OFICINA_CF; ?>" required="" name="P_NUMERO_OFICINA_CF">
+                     <div class="valid-feedback">Looks good!</div>
+                     </div>
+            
+                        
+                  <div class="col-md-4"style="background:#d4f6c8">
+                     <strong><label for="validationCustom02" class="form-label">TELEFONO DE OFICINA:</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NUMERO_OFICINA_NP; ?>" required="" name="P_NUMERO_OFICINA_NP">
+                     <div class="valid-feedback">Looks good!</div>
+                     </div>
+              
+                
+                  <div class="col-md-4"style="background:#fbeee6">
+                     <strong><label for="validationCustom02" class="form-label">TELEFONO DE OFICINA :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NUMERO_OFICINA_EDE; ?>" required="" name="P_NUMERO_OFICINA_EDE">
+                     <div class="valid-feedback">Looks good!</div>
+                     </div>
+                     <div class="col-md-4"style="background:#fef5e7">
+                     <strong><label for="validationCustom02" class="form-label">NÚMERO DE EXTENSIÓN :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NUMERO_EXTENSION_CF; ?>" required="" name="P_NUMERO_EXTENSION_CF">
+                     <div class="valid-feedback">Looks good!</div>
+                     </div>
+            
+                        
+                  <div class="col-md-4"style="background:#d4f6c8">
+                     <strong><label for="validationCustom02" class="form-label">NÚMERO DE EXTENSIÓN :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NUMERO_EXTENSION_NP; ?>" required="" name="P_NUMERO_EXTENSION_NP">
+                     <div class="valid-feedback">Looks good!</div>
+                     </div>
+              
+                
+                  <div class="col-md-4"style="background:#fbeee6">
+                     <strong><label for="validationCustom02" class="form-label">NÚMERO DE EXTENSIÓN :</label></strong>
+                     <input type="text" class="form-control" id="validationCustom02" value="<?php echo $P_NUMERO_EXTENSION_EDE; ?>" required="" name="P_NUMERO_EXTENSION_EDE">
+                     <div class="valid-feedback">Looks good!</div>
+                     </div>
+                   <div class="col-md-4"style="background:#fef5e7">
+                          <strong><label for="validationCustom01" class="form-label">EMAIL DE CONTACTO :</label></strong>
+                          <div class="input-group"> <span class="input-group-text" id="inputGroupPrepend2">@</span>
+                          <input type="text" class="form-control" id="validationCustom01" value="<?php echo $P_IMAIL_CONTACTO_CF; ?>" required="" name="P_IMAIL_CONTACTO_CF">
+                          <div class="valid-feedback">Bien!</div>      
+                        </div>
+                        </div>
+                        <div class="col-md-4"style="background:#d4f6c8">
+                          <strong><label for="validationCustom01" class="form-label">EMAIL DE CONTACTO :</label></strong>
+                          <div class="input-group"> <span class="input-group-text" id="inputGroupPrepend2">@</span>
+                          <input type="text" class="form-control" id="validationCustom01" value="<?php echo $P_IMAIL_CONTACTO_NP; ?>" required="" name="P_IMAIL_CONTACTO_NP">
+                          <div class="valid-feedback">Bien!</div>      
+                        </div>
+                        </div>
+                        
+                   <div class="col-md-4"style="background:#fbeee6">
+                          <strong><label for="validationCustom01" class="form-label">EMAIL DE CONTACTO :</label></strong>
+                          <div class="input-group"> <span class="input-group-text" id="inputGroupPrepend2">@</span>
+                          <input type="text" class="form-control" id="validationCustom01" value="<?php echo $P_IMAIL_CONTACTO_EDE; ?>" required="" name="P_IMAIL_CONTACTO_EDE">
+                          <div class="valid-feedback">Bien!</div>      
+                        </div>
+                        </div>
+                        
+           
+	<input type="hidden" name="validaNOMBRECONTACTO2" value="validaNOMBRECONTACTO2" />	
+                          
+	<div style="float:left;"border="solid 1px #000;">
+	<button class="btn btn-sm btn-outline-success px-5"  type="button" id="enviarNOMBRECONTACTO2">GUARDAR</button>
+	
+                         
+
+	</div>
+                         </form>   
+						 
+                          </div>
+						   </div>
+						 </div>
+             </div>
