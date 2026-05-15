@@ -9,137 +9,7 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 	define('__ROOT3__', dirname(dirname(__FILE__)));
 	require __ROOT3__."/includes/class.epcinn.php";	
 	
-/*
-class listadoproveedores extends colaboradores{
-		
-	public function listado2(){
-		$conn = $this->db();
 
-		$var = 'select *,02usuarios.id AS IDDD from 02usuarios, 02direccionproveedor1, 02metodopago where 02usuarios.id = 02direccionproveedor1.idRelacion and 02usuarios.id = 02metodopago.idRelacion 
-		order by 02usuarios.id desc';
-		
-		$query = mysqli_query($conn,$var);
-		echo "<table class='table mb-0 table-striped'><tr>
-		<td>usuario</td>
-		<td>RAZÓN SOCIAL</td>
-		<td>EFC</td>
-		<td>EMAIL</td>
-		<td>Masiva</td>
-
-		</tr>";
-		while($row = mysqli_fetch_array($query)){
-			echo '<tr>
-		<td><a href="PROVEEDORES.php?idPROV='.$row['IDDD'].'">'.$row['usuario'].'</a></td>
-		<td>'.$row['nommbrerazon'].' '.$row['nommbrerazon'].'</td>
-		<td>'.$row['rfc'].'</td>
-		<td>'.$row['email'].'</td>
-		<td>
-		<a href="'. $_SERVER['PHP_SELF']. '?idr1='.$row['id1'].'" target="_blank"><img src="includes/descargar.png"/></a></td>
-		</tr>';
-		}
-		echo "</table>";		
-	}	
-
-
-	public function variablesusuario2($id){
-		$conn = $this->db();
-		$var = 'select * from 02usuarios
-		where id='.$id.' order by id desc ';
-		$query = mysqli_query($conn,$var);
-		return $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
-	}
-	
-	
-	
-
-
-	public function variableusuario2(){
-		$conn = $this->db();
-		$variablequery = "select * from 02usuarios where idRelacion = '".$_SESSION['idPROV']."' ";
-		$arrayquery = mysqli_query($conn,$variablequery);
-		return $row = mysqli_fetch_array($arrayquery, MYSQLI_ASSOC);		
-	}
-
-	public function revisar_usuario2($idp){
-		$conn = $this->db();
-		$var1 = 'select id from 02usuarios where id =  "'.$idp.'" ';
-		$query = mysqli_query($conn,$var1) or die('P44'.mysqli_error($conn));
-		$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
-		return $row['id'];
-	}
-
-
-	public function revisar_02direccionproveedor1($idp){
-		$conn = $this->db();
-		$var1 = 'select id from 02direccionproveedor1 where idRelacion =  "'.$idp.'" ';
-		$query = mysqli_query($conn,$var1) or die('P44'.mysqli_error($conn));
-		$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
-		return $row['id'];
-	}
-	
-
-	public function revisar_02metodopago($RFC){
-		$conn = $this->db();
-		$var1 = 'select id from 02metodopago where P_RFC_MTDP =  "'.$RFC.'" ';
-		$query = mysqli_query($conn,$var1) or die('P44'.mysqli_error($conn));
-		$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
-		return $row['id'];
-	}	
-	
-
-
-
-	public function guardar_usuario2 ($usuario , $nommbrerazon , $contrasenia , $email , $rfc ){
-
-		$conn = $this->db();		
-		//$session = isset($_SESSION['idPROV'])?$_SESSION['idPROV']:'';
-		
-
-
-		$existe3 = $this->revisar_02metodopago($rfc);
-		$idwebc ='';
-		
-
-			if($existe3>=1){
-		mysqli_query($conn,"update 02metodopago set P_RFC_MTDP = '".$rfc."' where idRelacion = '".$existe3."' ; ") or die('P156'.mysqli_error($conn));
-		return "Actualizado";
-		$idwebc = $existe3;
-		}else{
-		mysqli_query($conn,"insert into 02metodopago 
-		( P_RFC_MTDP, idRelacion) values 
-		( '".$rfc."' ,  '".$idwebc."' ); ") or die('P160'.mysqli_error($conn));
-		$idwebc = mysqli_insert_id($conn);
-		return "Ingresado";
-		}		
-
-		$existe2 = $this->revisar_02direccionproveedor1($idwebc);
-			$existe1 = $this->revisar_usuario2($idwebc);		
-		
-		if($existe2>=1){
-		mysqli_query($conn,"update 02direccionproveedor1 set P_NOMBRE_COMERCIAL_EMPRESA = '".$nommbrerazon."' where idRelacion = '".$idwebc."' ; ") or die('P156'.mysqli_error($conn));
-		return "Actualizado";
-		}else{
-		mysqli_query($conn,"insert into 02direccionproveedor1 ( P_NOMBRE_COMERCIAL_EMPRESA, idRelacion) values ( '".$nommbrerazon."' ,  '".$idwebc."' ); ") or die('P160'.mysqli_error($conn));
-		return "Ingresado";
-		}
-
-	
-			if($existe1>=1){
-		mysqli_query($conn, "update 02usuarios set usuario = '".$usuario."' , nommbrerazon = '".$nommbrerazon."' , contrasenia = '".$contrasenia."' , email = '".$email."' where idRelacion = '".$idwebc."' ; ") or die('P156'.mysqli_error($conn));
-		return "Actualizado";
-		//$idwebc = $existe1;
-		}else{
-		mysqli_query($conn,"insert into 02usuarios ( usuario, nommbrerazon, contrasenia, email, idRelacion) values ( '".$usuario."' , '".$nommbrerazon."' , '".$contrasenia."' , '".$email."' ,  '".$idwebc."' ); ") or die('P160'.mysqli_error($conn));
-		//$idwebc = mysqli_insert_id($conn);
-		//return "Ingresado";
-		}	
-		
-		//}		
-	}
-
-	}
-
-	*/
 	
 	class accesoclase extends colaboradores{
 
@@ -601,9 +471,11 @@ class listadoproveedores extends colaboradores{
 		if($existe>=1){		
 
 		mysqli_query($conn,$var1) or die('P156'.mysqli_error($conn));
+		mysqli_query($conn, "update 02usuarios set nommbrerazon = '".$P_NOMBRE_COMERCIAL_EMPRESA."' where id = '".$session."' ; ") or die('P156'.mysqli_error($conn));
 		return "Actualizado";
 		}else{
 		mysqli_query($conn,$var2) or die('P160'.mysqli_error($conn));
+		mysqli_query($conn, "update 02usuarios set nommbrerazon = '".$P_NOMBRE_COMERCIAL_EMPRESA."' where id = '".$session."' ; ") or die('P156'.mysqli_error($conn));
 		return "Ingresado";
 		}
 		}else{
@@ -1749,18 +1621,19 @@ public function datos_bancario_default($pasarDID, $pasarD_text) {
 		return $arrayquery = mysqli_query($conn,$variablequery); 
 		}
 
-		public function PROVEEDORDE($query1){
+	public function PROVEEDORDE($empresaIds){
 		$session = isset($_SESSION['idPROV'])?$_SESSION['idPROV']:'';		
 		if($session != ''){
 		$conn = $this->db();				
 		$variablequery = "delete from 02empresarelacion where idRelacionP = '".$session."' ";
 		$arrayquery = mysqli_query($conn,$variablequery);
-		
-		$explotado = explode('or',$query1);
-		$cuenta = count($explotado) - 1;
-		for($rrr=0;$rrr<=$cuenta;$rrr++){
+
+		$empresaIds = is_array($empresaIds) ? $empresaIds : array();
+		foreach($empresaIds as $empresaId){
+		$empresaId = trim((string)$empresaId);
+		if($empresaId === ''){ continue; }
 		$variablequery = "insert into 02empresarelacion(idRelacionP,idRelacionC)
-		values('".$session."','".$explotado[$rrr]."')";
+		values('".$session."','".$empresaId."')";
 		$arrayquery = mysqli_query($conn,$variablequery); 
 		}
 		return "Ingresado"; 

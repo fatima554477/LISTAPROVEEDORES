@@ -74,7 +74,7 @@
     <option style="background:#fcfad9" <?php if($P_REGIMEN_FISCAL_MTDP=='612'){echo "selected";} ?> value="612"> 612 PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES Y PROFESIONALES</option>
 	<option style="background:#d9fce0" <?php if($P_REGIMEN_FISCAL_MTDP=='614'){echo "selected";} ?> value="614"> 614 INGRESOS POR INTERESES</option>
    <option style="background:#d9fcf6" <?php if($P_REGIMEN_FISCAL_MTDP=='615'){echo "selected";} ?> value="615"> 615 RÉGIMEN DE LOS INGRESOS POR OBTENCIÓN DE PREMIOS</option>
-   
+   	 <option style="background:#fcd9eb" <?php if($P_REGIMEN_FISCAL_MTDP=='616'){echo "selected";} ?> value="616"> 616 SIN OBLIGACIONES FISCALES</option>
     <option style="background:#e2fcd9" <?php if($P_REGIMEN_FISCAL_MTDP=='620'){echo "selected";} ?> value="620">620 SOCIEDADES COOPERATIVAS DE PRODUCCIÓN QUE OPTAN POR DIFERIR SUS INGRESOS</option>
 	 <option style="background:#d9fcf1" <?php if($P_REGIMEN_FISCAL_MTDP=='621'){echo "selected";} ?> value="621">621 INCORPORACIÓN FISCAL</option>
      <option style="background:#dad9fc" <?php if($P_REGIMEN_FISCAL_MTDP=='622'){echo "selected";} ?> value="622">622 ACTIVIDADES AGRÍCOLAS, GANADERAS, SILVÍCOLAS Y PESQUERAS</option>
@@ -103,13 +103,13 @@
 						  
 						                            <div class="col-md-4">
                           <th style="background:#ebf8fa"><strong><label for="validationCustom02" class="form-label">FORMA DE PAGO:</label></strong></th>
-                          <td style="background:#ebf8fa"><select class="form-select mb-3" aria-label="Default select example" id="validationCustom02" required="" name="P_FORMADE_PAGO"> >
+                          <td style="background:#ebf8fa"><select class="form-select mb-3" aria-label="Default select example" id="validationCustom02" required="" name="P_FORMADE_PAGO"> 
                          <option selected="">SELECCIONA UNA OPCION</option>
-						      <option style="background:#f2b4f5" <?php if($P_FORMADE_PAGO=='EFECTIVO'){echo "selected";} ?> value="EFECTIVO">01 EFECTIVO</option>
-                         <option style="background:#CEF6EC" <?php if($P_FORMADE_PAGO=='TRANSFERENCIA'){echo "selected";} ?> value="TRANSFERENCIA">O3 TRANSFERENCIA</option>
-                         <option style="background:#BDBDBD" <?php if($P_FORMADE_PAGO=='TARJETA'){echo "selected";} ?> value="TARJETA DE CREDITO">04 TARJETA DE CREDITO</option>
-						 <option style="background:#f8dbd9" <?php if($P_FORMADE_PAGO=='TARJETA'){echo "selected";} ?> value="TARJETA DE CREDITO">28 TARJETA DE DEBITO</option>
-						<option style="background:#ecd9f8" <?php if($P_FORMADE_PAGO=='TARJETA'){echo "selected";} ?> value="TARJETA DE CREDITO">99 POR DEFINIR</option>
+ <option style="background:#f2b4f5" <?php if($P_FORMADE_PAGO=='01'){echo "selected";} ?> value="01">01 EFECTIVO</option>
+            <option style="background:#CEF6EC" <?php if($P_FORMADE_PAGO=='03'){echo "selected";} ?> value="03">O3 TRANSFERENCIA</option>
+                         <option style="background:#BDBDBD" <?php if($P_FORMADE_PAGO=='04'){echo "selected";} ?> value="04">04 TARJETA DE CREDITO</option>
+						 <option style="background:#f8dbd9" <?php if($P_FORMADE_PAGO=='28'){echo "selected";} ?> value="28">28 TARJETA DE DEBITO</option>
+						<option style="background:#ecd9f8" <?php if($P_FORMADE_PAGO=='99'){echo "selected";} ?> value="99">99 POR DEFINIR</option>
                     
                          </select> </td>
                           <div class="valid-feedback">Bien!</div>

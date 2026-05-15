@@ -1945,6 +1945,7 @@ $.ajax({
     $('#mensajeCALIFICACION').html('cargando'); 
     },    
    success:function(data){
+	   $("#CALIFICACIONform")[0].reset();
 	
 		$("#reset_CALIFICACION").load(location.href + " #reset_CALIFICACION");	
 			$("#mensajeCALIFICACION").html("<span id='ACTUALIZADO' >"+data+"</span>").fadeIn().delay(2000).fadeOut(); 
