@@ -123,8 +123,7 @@ if ($action == "ajax") {
             if($database->plantilla_filtro($nombreTabla,"P_RFC_MTDP",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">RFC</th>
             <?php } 
 			
-            /*if($database->plantilla_filtro($nombreTabla,"usuario",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">USUARIO</th>
-            <?php }*/
+        
 			if($database->plantilla_filtro($nombreTabla,"usuario",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">CONTACTO</th>
             <?php } 
 			      if($database->plantilla_filtro($nombreTabla,"usuario",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">CEL DEL CONTACTO</th>
@@ -241,15 +240,18 @@ echo $convenio; ?>">--></td>
 </td>
             <td><?php echo $row["IDDDDDD"];?></td>
             <?php /*inicia copiar y pegar iniciaA5*/ ?>
-            <!--<hr/><H1>FOREACH FILTRO .PHP A5</H1><BR/>-->
-            <?php if($database->plantilla_filtro($nombreTabla,"nommbrerazon",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><a href="PROVEEDORES.php?idPROV=<?php echo $row["IDDDDDD"]; ?>"><?php echo strtoupper($row['nommbrerazon']);?></a></td>
+        
+            <?php if($database->plantilla_filtro($nombreTabla,"nommbrerazon",$altaeventos,$DEPARTAMENTO)=="si"){ ?> <td style="text-align:center;">
+        <a href="PROVEEDORES.php?idPROV=<?php echo $row["IDDDDDD"]; ?>" target="_blank">
+            <?php echo strtoupper($row['nommbrerazon']); ?>
+        </a>
+    </td>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"P_NOMBRE_FISCAL_RS_EMPRESA",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['P_NOMBRE_FISCAL_RS_EMPRESA']);?></td>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"P_RFC_MTDP",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['P_RFC_MTDP']);?></td>
             <?php } 
-            /*if($database->plantilla_filtro($nombreTabla,"usuario",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['usuario']);?></td>
-            <?php } */
+          
 		if($database->plantilla_filtro($nombreTabla,"NOMBRE_CONTACTO_PROVEE",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($query_contactos); ?></td>
             <?php }
 	   if($database->plantilla_filtro($nombreTabla,"TELEFONO_CONTACPROVEE",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($query_contactoCEL); ?></td>
