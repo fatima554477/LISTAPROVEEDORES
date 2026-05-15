@@ -136,6 +136,7 @@ if ($action == "ajax") {
         <tr>
             <th style="background:#c9e8e8"></th>
             <th style="background:#c9e8e8">#</th>
+            <th style="background:#c9e8e8"></th>
 
          <?php 
          if($database->plantilla_filtro($nombreTabla,"nommbrerazon",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">NOMBRE COMERCIAL DE LA EMPRESA</th>
@@ -172,6 +173,7 @@ if ($action == "ajax") {
           <th style="background:#c9e8e8;text-align:center"></th>
         </tr>
         <tr>
+            <td style="background:#c9e8e8"></td>
             <td style="background:#c9e8e8"></td>
             <td style="background:#c9e8e8"></td>
             <?php /*inicia copiar y pegar iniciaA4*/ ?>
@@ -261,14 +263,18 @@ echo $convenio; ?>">--></td>
                }">
 </td>
             <td><?php echo $row["IDDDDDD"];?></td>
-            <?php /*inicia copiar y pegar iniciaA5*/ ?>
+        <td>
+    <input type="button" name="view_bitacora" value="BITÁCORA" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-outline-primary btn-xs view_BITACORA_PROV" />
+</td>
         
             <?php if($database->plantilla_filtro($nombreTabla,"nommbrerazon",$altaeventos,$DEPARTAMENTO)=="si"){ ?> <td style="text-align:center;">
         <a href="PROVEEDORES.php?idPROV=<?php echo $row["IDDDDDD"]; ?>" target="_blank">
             <?php echo strtoupper($row['nommbrerazon']); ?>
         </a>
     </td>
+	
             <?php } 
+			
             if($database->plantilla_filtro($nombreTabla,"P_NOMBRE_FISCAL_RS_EMPRESA",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['P_NOMBRE_FISCAL_RS_EMPRESA']);?></td>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"P_RFC_MTDP",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['P_RFC_MTDP']);?></td>
@@ -315,7 +321,7 @@ echo $convenio; ?>">--></td>
        <?php if($database->variablespermisos('','listadoP ','modificar')=='si'){ ?>
                 <td>
                     <input type="button" name="view" value="MODIFICAR" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-info btn-xs view_LP" />
-                    <input type="button" name="view_bitacora" value="BITÁCORA" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-outline-primary btn-xs view_BITACORA_PROV" />
+                  
                 </td>
             <?php } 
             if($database->variablespermisos('','listadoP ','borrar')=='si'){ ?>
