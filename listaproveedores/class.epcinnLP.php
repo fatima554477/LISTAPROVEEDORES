@@ -395,11 +395,26 @@ if ($rfc != '') {
 
 	
 
+        $direccionQuery = mysqli_query($conn, "select idRelacion from 02direccionproveedor1 where idRelacion = '".$ID."' ");
+        if (mysqli_num_rows($direccionQuery) > 0) {
         mysqli_query($conn, "update 02direccionproveedor1 set
         P_NOMBRE_COMERCIAL_EMPRESA = '".$nommbrerazon."',
         P_NOMBRE_FISCAL_RS_EMPRESA = '".$P_NOMBRE_FISCAL_RS_EMPRESA."',
         P_RFC_MTDP = '".$P_RFC_MTDP."'
         where idRelacion = '".$ID."' ; ") or die('P156'.mysqli_error($conn));
+        } else {
+        mysqli_query($conn, "insert into 02direccionproveedor1 (
+        idRelacion,
+        P_NOMBRE_COMERCIAL_EMPRESA,
+        P_NOMBRE_FISCAL_RS_EMPRESA,
+        P_RFC_MTDP
+        ) values (
+        '".$ID."',
+        '".$nommbrerazon."',
+        '".$P_NOMBRE_FISCAL_RS_EMPRESA."',
+        '".$P_RFC_MTDP."'
+        ); ") or die('P156'.mysqli_error($conn));
+        }
 
 
 
