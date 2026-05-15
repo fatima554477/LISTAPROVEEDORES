@@ -12,6 +12,37 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 
 	
 	class accesoclase extends colaboradores{
+	private function nombre_usuario_bitacora_proveedor(){
+		foreach (array('NOMBREUSUARIO','nombreusuario','usuario') as $key) {
+			if(!empty($_SESSION[$key])){ return $_SESSION[$key]; }
+		}
+		if(!empty($_SESSION['idem'])){ return 'ID:'.$_SESSION['idem']; }
+		return 'SIN_USUARIO';
+	}
+
+	private function registrar_bitacora_proveedor($idProveedor, $tipoMovimiento, $detalle){
+		$conn = $this->db();
+		$idProveedor   = intval($idProveedor);
+		$tipoMovimiento = mysqli_real_escape_string($conn, $tipoMovimiento);
+		$detalle       = mysqli_real_escape_string($conn, $detalle);
+		$usuario       = mysqli_real_escape_string($conn, $this->nombre_usuario_bitacora_proveedor());
+
+		mysqli_query($conn, "CREATE TABLE IF NOT EXISTS 02PROVEEDORES_BITACORA (
+			id int(11) NOT NULL AUTO_INCREMENT,
+			id_proveedor int(11) NOT NULL,
+			tipo_movimiento varchar(50) NOT NULL,
+			detalle text,
+			usuario varchar(255) DEFAULT NULL,
+			fecha_hora datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (id),
+			KEY idx_id_proveedor (id_proveedor),
+			KEY idx_fecha_hora (fecha_hora)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+		mysqli_query($conn, "INSERT INTO 02PROVEEDORES_BITACORA
+			(id_proveedor, tipo_movimiento, detalle, usuario, fecha_hora)
+			VALUES ('".$idProveedor."', '".$tipoMovimiento."', '".$detalle."', '".$usuario."', NOW())");
+	}
 
 
 
@@ -468,14 +499,16 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 		'".$P_WHATSAPP_EMPRESA_1."' , '".$P_IMAIL_EMPRESA."' ,'".$P_PAGINA_WEB_EMPRESA."' ,
 		'".$P_NOMBRE_APP_EMPRESA."' , '".$session."' );  ";			
 			
-		if($existe>=1){		
+	if($existe>=1){		
 
 		mysqli_query($conn,$var1) or die('P156'.mysqli_error($conn));
 		mysqli_query($conn, "update 02usuarios set nommbrerazon = '".$P_NOMBRE_COMERCIAL_EMPRESA."' where id = '".$session."' ; ") or die('P156'.mysqli_error($conn));
+		$this->registrar_bitacora_proveedor($session, 'ACTUALIZACION', 'Se actualizó información de dirección y datos fiscales del proveedor.');
 		return "Actualizado";
 		}else{
 		mysqli_query($conn,$var2) or die('P160'.mysqli_error($conn));
 		mysqli_query($conn, "update 02usuarios set nommbrerazon = '".$P_NOMBRE_COMERCIAL_EMPRESA."' where id = '".$session."' ; ") or die('P156'.mysqli_error($conn));
+		$this->registrar_bitacora_proveedor($session, 'INGRESO', 'Se registró información inicial de dirección y datos fiscales del proveedor.');
 		return "Ingresado";
 		}
 		}else{
