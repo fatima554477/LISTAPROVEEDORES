@@ -152,7 +152,34 @@ PROGRAMER
 		';
 		$query = mysqli_query($conn,$var1) or die('P44'.mysqli_error($conn));
 		$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
-		return $row['IDDD'];
+	return $row['IDDD'];
+	}
+
+	public function listado_bitacora_proveedor_array($idProveedor){
+		$conn = $this->db();
+		$idProveedor = intval($idProveedor);
+		$resultado = array();
+		if($idProveedor <= 0){ return $resultado; }
+
+		$query = mysqli_query($conn, "SELECT id, tipo_movimiento, detalle, usuario, fecha_hora
+			FROM 02PROVEEDORES_BITACORA
+			WHERE id_proveedor = '".$idProveedor."'
+			ORDER BY fecha_hora DESC, id DESC
+			LIMIT 200");
+
+		if($query){
+			while($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+				$resultado[] = array(
+					'id' => $row['id'],
+					'tipo_movimiento' => $row['tipo_movimiento'],
+					'detalle' => $row['detalle'],
+					'usuario' => $row['usuario'],
+					'fecha_hora' => $row['fecha_hora']
+				);
+			}
+		}
+
+		return $resultado;
 	}
 
 
