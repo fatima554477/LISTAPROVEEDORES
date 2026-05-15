@@ -155,32 +155,44 @@ PROGRAMER
 	return $row['IDDD'];
 	}
 
-	public function listado_bitacora_proveedor_array($idProveedor){
-		$conn = $this->db();
-		$idProveedor = intval($idProveedor);
-		$resultado = array();
-		if($idProveedor <= 0){ return $resultado; }
+public function listado_bitacora_proveedor_array($idProveedor){
+    $conn = $this->db();
+    $idProveedor = intval($idProveedor);
+    $resultado = array();
+    if($idProveedor <= 0){ return $resultado; }
 
-		$query = mysqli_query($conn, "SELECT id, tipo_movimiento, detalle, usuario, fecha_hora
-			FROM 02PROVEEDORES_BITACORA
-			WHERE id_proveedor = '".$idProveedor."'
-			ORDER BY fecha_hora DESC, id DESC
-			LIMIT 200");
+    // JOIN para traer nombre comercial del proveedor
+    $query = mysqli_query($conn, "
+        SELECT 
+            b.id, 
+            b.tipo_movimiento, 
+            b.detalle, 
+            b.usuario, 
+            b.fecha_hora,
+            COALESCE(d.P_NOMBRE_COMERCIAL_EMPRESA, u.nommbrerazon, CONCAT('Proveedor #', b.id_proveedor)) AS nombre_comercial
+        FROM 02PROVEEDORES_BITACORA b
+        LEFT JOIN 02usuarios u ON u.id = b.id_proveedor
+        LEFT JOIN 02direccionproveedor1 d ON d.idRelacion = b.id_proveedor
+        WHERE b.id_proveedor = '".$idProveedor."'
+        ORDER BY b.fecha_hora DESC, b.id DESC
+        LIMIT 200
+    ");
 
-		if($query){
-			while($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
-				$resultado[] = array(
-					'id' => $row['id'],
-					'tipo_movimiento' => $row['tipo_movimiento'],
-					'detalle' => $row['detalle'],
-					'usuario' => $row['usuario'],
-					'fecha_hora' => $row['fecha_hora']
-				);
-			}
-		}
+    if($query){
+        while($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+            $resultado[] = array(
+                'id'              => $row['id'],
+                'tipo_movimiento' => $row['tipo_movimiento'],
+                'detalle'         => $row['detalle'],
+                'usuario'         => $row['usuario'],
+                'fecha_hora'      => $row['fecha_hora'],
+                'nombre_comercial'=> $row['nombre_comercial']
+            );
+        }
+    }
 
-		return $resultado;
-	}
+    return $resultado;
+}
 
 
      public function PROVEEDOREMPRESA($IDRELACIONP,$IDRELACIONC){
