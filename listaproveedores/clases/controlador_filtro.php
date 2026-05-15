@@ -21,6 +21,18 @@ if ($action == "bitacora_proveedor") {
     header('Content-Type: application/json; charset=utf-8');
     $idProveedor = isset($_POST["idProveedor"]) ? intval($_POST["idProveedor"]) : 0;
     $respuesta = $database->listado_bitacora_proveedor_array($idProveedor);
+    foreach ($respuesta as $k => $row) {
+        $fechaOriginal = isset($row['fecha_hora']) ? trim((string)$row['fecha_hora']) : '';
+        if ($fechaOriginal !== '') {
+            try {
+                $dt = new DateTime($fechaOriginal, new DateTimeZone('UTC'));
+                $dt->setTimezone(new DateTimeZone('America/Mexico_City'));
+                $respuesta[$k]['fecha_hora'] = $dt->format('d/m/Y h:i A');
+            } catch (Exception $e) {
+                $respuesta[$k]['fecha_hora'] = $fechaOriginal;
+            }
+        }
+    }
     if (ob_get_length()) { ob_clean(); }
     echo json_encode($respuesta);
     exit;
