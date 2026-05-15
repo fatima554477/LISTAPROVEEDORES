@@ -67,5 +67,51 @@ var CONVENIO_PROVEEDOR=$("#CONVENIO_PROVEEDOR_1").val();
 			})
 		}
 /* terminaB1*/		
+
+$(document).on('click', '.view_BITACORA_PROV', function () {
+	var idProveedor = $(this).attr("id");
+	if (!idProveedor) { return; }
+
+	if ($('#modalBitacoraProveedor').length === 0) {
+		$('body').append(
+			'<div class="modal fade" id="modalBitacoraProveedor" tabindex="-1" aria-hidden="true">' +
+			' <div class="modal-dialog modal-lg modal-dialog-scrollable">' +
+			'  <div class="modal-content">' +
+			'   <div class="modal-header"><h5 class="modal-title">Bitácora de proveedor</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>' +
+			'   <div class="modal-body" id="bitacoraProveedorBody">Cargando...</div>' +
+			'  </div>' +
+			' </div>' +
+			'</div>'
+		);
+	}
+
+	$('#bitacoraProveedorBody').html('Cargando...');
+	$('#modalBitacoraProveedor').modal('show');
+
+	$.ajax({
+		url: 'listaproveedores/clases/controlador_filtro.php',
+		type: 'POST',
+		data: { action: 'bitacora_proveedor', idProveedor: idProveedor },
+		success: function (resp) {
+			if (typeof resp === 'string') {
+				try { resp = JSON.parse(resp); } catch (e) { resp = []; }
+			}
+			if (!resp || !resp.length) {
+				$('#bitacoraProveedorBody').html('<div class="alert alert-secondary mb-0">Sin movimientos registrados.</div>');
+				return;
+			}
+			var html = '<div class="table-responsive"><table class="table table-sm table-striped">';
+			html += '<thead><tr><th>Fecha</th><th>Movimiento</th><th>Detalle</th><th>Usuario</th></tr></thead><tbody>';
+			$.each(resp, function (_, row) {
+				html += '<tr><td>' + (row.fecha_hora || '-') + '</td><td>' + (row.tipo_movimiento || '-') + '</td><td>' + (row.detalle || '-') + '</td><td>' + (row.usuario || '-') + '</td></tr>';
+			});
+			html += '</tbody></table></div>';
+			$('#bitacoraProveedorBody').html(html);
+		},
+		error: function () {
+			$('#bitacoraProveedorBody').html('<div class="alert alert-danger mb-0">No fue posible cargar la bitácora.</div>');
+		}
+	});
+});
 		
 	</script>

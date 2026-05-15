@@ -15,6 +15,16 @@ if (!isset($_SESSION)) {
 }
 define("__ROOT6__", dirname(__FILE__));
 $action = (isset($_POST["action"]) && $_POST["action"] != NULL) ? $_POST["action"] : "";
+if ($action == "bitacora_proveedor") {
+    require(__ROOT6__."/class.filtro.php");
+    $database = new orders();
+    header('Content-Type: application/json; charset=utf-8');
+    $idProveedor = isset($_POST["idProveedor"]) ? intval($_POST["idProveedor"]) : 0;
+    $respuesta = $database->listado_bitacora_proveedor_array($idProveedor);
+    if (ob_get_length()) { ob_clean(); }
+    echo json_encode($respuesta);
+    exit;
+}
 if ($action == "ajax") {
 
     require(__ROOT6__."/class.filtro.php");
@@ -290,14 +300,10 @@ echo $convenio; ?>">--></td>
             <?php } 
             if($database->plantilla_filtro($nombreTabla,"PCONTACTADO_POR",$altaeventos,$DEPARTAMENTO)=="si"){ ?><td style="text-align:center;"><?php echo strtoupper($row['PCONTACTADO_POR']);?></td>
             <?php } ?>
-            <?php if($database->variablespermisos('','listadoP ','modificar')=='si'){ ?>
+       <?php if($database->variablespermisos('','listadoP ','modificar')=='si'){ ?>
                 <td>
                     <input type="button" name="view" value="MODIFICAR" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-info btn-xs view_LP" />
-                </td>
-            <?php } 
-            if($database->variablespermisos('','listadoDUPLI','ver')=='si'){ ?>
-                <td>
-                    <input type="button" name="view" value="DUPLICAR" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-info btn-xs view_DUPLICAR" />
+                    <input type="button" name="view_bitacora" value="BITÁCORA" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-outline-primary btn-xs view_BITACORA_PROV" />
                 </td>
             <?php } 
             if($database->variablespermisos('','listadoP ','borrar')=='si'){ ?>
