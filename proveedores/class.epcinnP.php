@@ -41,6 +41,19 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 			KEY idx_fecha_hora (fecha_hora)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
  
+		// Evita duplicados inmediatos del mismo evento (mismo proveedor/tipo/detalle/usuario)
+		// cuando por UI o doble submit se dispara la misma acción casi al mismo tiempo.
+		$queryDuplicado = mysqli_query($conn, "SELECT id FROM 02PROVEEDORES_BITACORA
+			WHERE id_proveedor = '".$idProveedor."'
+			  AND tipo_movimiento = '".$tipoMovimiento."'
+			  AND detalle = '".$detalle."'
+			  AND usuario = '".$usuario."'
+			  AND fecha_hora >= (NOW() - INTERVAL 5 SECOND)
+			LIMIT 1");
+		if($queryDuplicado && mysqli_num_rows($queryDuplicado) > 0){
+			return;
+		}
+
 		mysqli_query($conn, "INSERT INTO 02PROVEEDORES_BITACORA
 			(id_proveedor, tipo_movimiento, detalle, usuario, fecha_hora)
 		VALUES ('".$idProveedor."', '".$tipoMovimiento."', '".$detalle."', '".$usuario."', NOW())");
