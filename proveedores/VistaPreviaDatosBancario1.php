@@ -15,6 +15,8 @@ $queryVISTAPREV = $conexion->Listado_datos_bancariosPRO2($identioficador);
  $output .= ' <form  id="Listado_datos_bancariosPform"> 
       <div class="table-responsive">  
            <table class="table table-bordered">';
+		   date_default_timezone_set('America/Mexico_City');
+           $fechaActual = date('Y-m-d');
     while($row = mysqli_fetch_array($queryVISTAPREV))
     {
 
@@ -94,9 +96,19 @@ $queryVISTAPREV = $conexion->Listado_datos_bancariosPRO2($identioficador);
 </tr><tr>
 <td width="30%"><label>FOTO DEL ESTADO DE CUENTA:</label></td>
 <td width="70%"><div class="col-md-6"> <div id="drop_file_zone" ondrop="upload_file(event, \'FOTO_ESTADO_PROVEE\');" ondragover="return false" style="width:300px;"> <p>Suelta aquí o busca tu archivo</p> <p> <input class="form-control form-control-sm" id="FOTO_ESTADO_PROVEE" type="text" onkeydown="return false" onclick="file_explorer(\'FOTO_ESTADO_PROVEE\');" style="width:250px;" value="'.$row["FOTO_ESTADO_PROVEE"].'" required /> </p> <input type="file" name="FOTO_ESTADO_PROVEE" id="nono"/> <div id="2FOTO_ESTADO_PROVEE"> '.$urlFOTO_ESTADO_PROVEE.'</div> </div> </div></td>
-</tr> <tr>
-<td width="30%"><label>FECHA DE ÚLTIMA CARGA:</label></td>
-<td width="70%"><input  type=»text» readonly=»readonly» name="ULTIMA_CARGA_DATOBANCA" value="'.$row["ULTIMA_CARGA_DATOBANCA"].'"></td>
+</tr> 
+
+
+<tr>
+<td width="30%"><label>OBSERVACIONES</label></td>
+<td width="70%"><input type="text" name="OBSERVACIONES_D" value="'.$row["OBSERVACIONES_D"].'"></td>
+</tr>
+
+<tr>
+  <td width="30%"><label>FECHA DE ÚLTIMA CARGA:</label></td>
+  <td width="70%">
+    <input type="text" readonly="readonly" name="ULTIMA_CARGA_DATOBANCA" value="'.$fechaActual.'">
+  </td>
 </tr>
 
 	 <tr>  

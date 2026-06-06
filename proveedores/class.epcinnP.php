@@ -71,6 +71,12 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 		return $cambios;
 	}
  
+	private function escapar_sql($conn, $valor){
+
+		return mysqli_real_escape_string($conn, (string)$valor);
+
+	}
+
 	/* ═════════════════════════════════════════════════════════════
 	   FOTOS DE PRODUCTOS / LOGO
 	   ═════════════════════════════════════════════════════════════ */
@@ -377,7 +383,8 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 	   DIRECCIÓN PROVEEDOR 1  (ya tenía bitácora; se enriquece)
 	   ═════════════════════════════════════════════════════════════ */
 	public function variable_DIRECCIONP1(){ $conn=$this->db(); return mysqli_fetch_array(mysqli_query($conn,"select * from 02direccionproveedor1 where idRelacion='".$_SESSION['idPROV']."' "),MYSQLI_ASSOC); }
-	public function revisar_DIRECCIONP1(){ $conn=$this->db(); $row=mysqli_fetch_array(mysqli_query($conn,'select id from 02direccionproveedor1 where idRelacion="'.$_SESSION['idPROV'].'" ') or die('P44'.mysqli_error($conn)),MYSQLI_ASSOC); return $row['id']; }
+	public function revisar_DIRECCIONP1(){ $conn=$this->db(); $row=mysqli_fetch_array(mysqli_query($conn,'select id from 02direccionproveedor1 where idRelacion="'.$_SESSION['idPROV'].'" ') or die('P44'.mysqli_error($conn)),MYSQLI_ASSOC); return isset($row['id'])?$row['id']:null; }
+
  
 	public function direccionproveedor1($P_NOMBRE_COMERCIAL_EMPRESA,$P_NOMBRE_FISCAL_RS_EMPRESA,$P_RFC_MTDP,$P_REGIMEN_FISCAL_MTDP,$_P_METODO_DE_PAGO,$P_FORMADE_PAGO,$P_USO_CFDI,$FISICA_MORAL,$P_DIRECCION_FISCAL_EMPRESA,$P_EDIFICIO_EMPRESA,$P_CALLE_EMPRESA,$P_NUMERO_EXTERIOR_EMPRESA,$P_NUMERO_INTERIOR_EMPRESA,$P_NUMERO_OFICINA_EMPRESA,$P_COLONIA_EMPRESA,$P_ALCALDIA_EMPRESA,$P_C_P_EMPRESA,$P_CIUDAD_EMPRESA,$P_ESTADO_EMPRESA,$P_PAIS_EMPRESA,$dircasa11,$P_UBICACION_MAPA_1,$P_TELEFONO_1_EMPRESA,$P_TELEFONO_2_EMPRESA,$P_WHATSAPP_EMPRESA_1,$P_IMAIL_EMPRESA,$P_PAGINA_WEB_EMPRESA,$P_NOMBRE_APP_EMPRESA){
 		$conn    = $this->db();
@@ -404,21 +411,54 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 		);
  
 		if($session != ''){
-			$var1 = "update 02direccionproveedor1 set P_NOMBRE_COMERCIAL_EMPRESA='".$P_NOMBRE_COMERCIAL_EMPRESA."',P_NOMBRE_FISCAL_RS_EMPRESA='".$P_NOMBRE_FISCAL_RS_EMPRESA."',P_RFC_MTDP='".$P_RFC_MTDP."',P_REGIMEN_FISCAL_MTDP='".$P_REGIMEN_FISCAL_MTDP."',_P_METODO_DE_PAGO='".$_P_METODO_DE_PAGO."',P_FORMADE_PAGO='".$P_FORMADE_PAGO."',P_USO_CFDI='".$P_USO_CFDI."',FISICA_MORAL='".$FISICA_MORAL."',P_DIRECCION_FISCAL_EMPRESA='".$P_DIRECCION_FISCAL_EMPRESA."',P_EDIFICIO_EMPRESA='".$P_EDIFICIO_EMPRESA."',P_CALLE_EMPRESA='".$P_CALLE_EMPRESA."',P_NUMERO_EXTERIOR_EMPRESA='".$P_NUMERO_EXTERIOR_EMPRESA."',P_NUMERO_INTERIOR_EMPRESA='".$P_NUMERO_INTERIOR_EMPRESA."',P_NUMERO_OFICINA_EMPRESA='".$P_NUMERO_OFICINA_EMPRESA."',P_COLONIA_EMPRESA='".$P_COLONIA_EMPRESA."',P_ALCALDIA_EMPRESA='".$P_ALCALDIA_EMPRESA."',P_C_P_EMPRESA='".$P_C_P_EMPRESA."',P_CIUDAD_EMPRESA='".$P_CIUDAD_EMPRESA."',P_ESTADO_EMPRESA='".$P_ESTADO_EMPRESA."',P_PAIS_EMPRESA='".$P_PAIS_EMPRESA."',dircasa11='".$dircasa11."',P_UBICACION_MAPA_1='".$P_UBICACION_MAPA_1."',P_TELEFONO_1_EMPRESA='".$P_TELEFONO_1_EMPRESA."',P_TELEFONO_2_EMPRESA='".$P_TELEFONO_2_EMPRESA."',P_WHATSAPP_EMPRESA_1='".$P_WHATSAPP_EMPRESA_1."',P_IMAIL_EMPRESA='".$P_IMAIL_EMPRESA."',P_PAGINA_WEB_EMPRESA='".$P_PAGINA_WEB_EMPRESA."',P_NOMBRE_APP_EMPRESA='".$P_NOMBRE_APP_EMPRESA."' where idRelacion='".$session."' ;";
-			$var2 = "insert into 02direccionproveedor1 (P_NOMBRE_COMERCIAL_EMPRESA,P_NOMBRE_FISCAL_RS_EMPRESA,P_RFC_MTDP,P_REGIMEN_FISCAL_MTDP,_P_METODO_DE_PAGO,P_FORMADE_PAGO,P_USO_CFDI,FISICA_MORAL,P_DIRECCION_FISCAL_EMPRESA,P_EDIFICIO_EMPRESA,P_CALLE_EMPRESA,P_NUMERO_EXTERIOR_EMPRESA,P_NUMERO_INTERIOR_EMPRESA,P_NUMERO_OFICINA_EMPRESA,P_COLONIA_EMPRESA,P_ALCALDIA_EMPRESA,P_C_P_EMPRESA,P_CIUDAD_EMPRESA,P_ESTADO_EMPRESA,P_PAIS_EMPRESA,dircasa11,P_UBICACION_MAPA_1,P_TELEFONO_1_EMPRESA,P_TELEFONO_2_EMPRESA,P_WHATSAPP_EMPRESA_1,P_IMAIL_EMPRESA,P_PAGINA_WEB_EMPRESA,P_NOMBRE_APP_EMPRESA,idRelacion) values('".$P_NOMBRE_COMERCIAL_EMPRESA."','".$P_NOMBRE_FISCAL_RS_EMPRESA."','".$P_RFC_MTDP."','".$P_REGIMEN_FISCAL_MTDP."','".$_P_METODO_DE_PAGO."','".$P_FORMADE_PAGO."','".$P_USO_CFDI."','".$FISICA_MORAL."','".$P_DIRECCION_FISCAL_EMPRESA."','".$P_EDIFICIO_EMPRESA."','".$P_CALLE_EMPRESA."','".$P_NUMERO_EXTERIOR_EMPRESA."','".$P_NUMERO_INTERIOR_EMPRESA."','".$P_NUMERO_OFICINA_EMPRESA."','".$P_COLONIA_EMPRESA."','".$P_ALCALDIA_EMPRESA."','".$P_C_P_EMPRESA."','".$P_CIUDAD_EMPRESA."','".$P_ESTADO_EMPRESA."','".$P_PAIS_EMPRESA."','".$dircasa11."','".$P_UBICACION_MAPA_1."','".$P_TELEFONO_1_EMPRESA."','".$P_TELEFONO_2_EMPRESA."','".$P_WHATSAPP_EMPRESA_1."','".$P_IMAIL_EMPRESA."','".$P_PAGINA_WEB_EMPRESA."','".$P_NOMBRE_APP_EMPRESA."','".$session."');";
- 
+	$datosSql = array();
+
+			foreach($datosNuevos as $campo => $valor){
+
+				$datosSql[$campo] = $this->escapar_sql($conn, $valor);
+
+			}
+
+			$datosSql['P_EDIFICIO_EMPRESA'] = $this->escapar_sql($conn, $P_EDIFICIO_EMPRESA);
+
+			$datosSql['P_NUMERO_INTERIOR_EMPRESA'] = $this->escapar_sql($conn, $P_NUMERO_INTERIOR_EMPRESA);
+
+			$datosSql['P_NUMERO_OFICINA_EMPRESA'] = $this->escapar_sql($conn, $P_NUMERO_OFICINA_EMPRESA);
+
+			$datosSql['P_ALCALDIA_EMPRESA'] = $this->escapar_sql($conn, $P_ALCALDIA_EMPRESA);
+
+			$datosSql['P_C_P_EMPRESA'] = $this->escapar_sql($conn, $P_C_P_EMPRESA);
+
+			$datosSql['dircasa11'] = $this->escapar_sql($conn, $dircasa11);
+
+			$datosSql['P_UBICACION_MAPA_1'] = $this->escapar_sql($conn, $P_UBICACION_MAPA_1);
+
+			$datosSql['P_TELEFONO_2_EMPRESA'] = $this->escapar_sql($conn, $P_TELEFONO_2_EMPRESA);
+
+			$datosSql['P_WHATSAPP_EMPRESA_1'] = $this->escapar_sql($conn, $P_WHATSAPP_EMPRESA_1);
+
+			$datosSql['P_NOMBRE_APP_EMPRESA'] = $this->escapar_sql($conn, $P_NOMBRE_APP_EMPRESA);
+
+			$sessionSql = $this->escapar_sql($conn, $session);
+
+			$var1 = "update 02direccionproveedor1 set P_NOMBRE_COMERCIAL_EMPRESA='".$datosSql['P_NOMBRE_COMERCIAL_EMPRESA']."',P_NOMBRE_FISCAL_RS_EMPRESA='".$datosSql['P_NOMBRE_FISCAL_RS_EMPRESA']."',P_RFC_MTDP='".$datosSql['P_RFC_MTDP']."',P_REGIMEN_FISCAL_MTDP='".$datosSql['P_REGIMEN_FISCAL_MTDP']."',_P_METODO_DE_PAGO='".$datosSql['_P_METODO_DE_PAGO']."',P_FORMADE_PAGO='".$datosSql['P_FORMADE_PAGO']."',P_USO_CFDI='".$datosSql['P_USO_CFDI']."',FISICA_MORAL='".$datosSql['FISICA_MORAL']."',P_DIRECCION_FISCAL_EMPRESA='".$datosSql['P_DIRECCION_FISCAL_EMPRESA']."',P_EDIFICIO_EMPRESA='".$datosSql['P_EDIFICIO_EMPRESA']."',P_CALLE_EMPRESA='".$datosSql['P_CALLE_EMPRESA']."',P_NUMERO_EXTERIOR_EMPRESA='".$datosSql['P_NUMERO_EXTERIOR_EMPRESA']."',P_NUMERO_INTERIOR_EMPRESA='".$datosSql['P_NUMERO_INTERIOR_EMPRESA']."',P_NUMERO_OFICINA_EMPRESA='".$datosSql['P_NUMERO_OFICINA_EMPRESA']."',P_COLONIA_EMPRESA='".$datosSql['P_COLONIA_EMPRESA']."',P_ALCALDIA_EMPRESA='".$datosSql['P_ALCALDIA_EMPRESA']."',P_C_P_EMPRESA='".$datosSql['P_C_P_EMPRESA']."',P_CIUDAD_EMPRESA='".$datosSql['P_CIUDAD_EMPRESA']."',P_ESTADO_EMPRESA='".$datosSql['P_ESTADO_EMPRESA']."',P_PAIS_EMPRESA='".$datosSql['P_PAIS_EMPRESA']."',dircasa11='".$datosSql['dircasa11']."',P_UBICACION_MAPA_1='".$datosSql['P_UBICACION_MAPA_1']."',P_TELEFONO_1_EMPRESA='".$datosSql['P_TELEFONO_1_EMPRESA']."',P_TELEFONO_2_EMPRESA='".$datosSql['P_TELEFONO_2_EMPRESA']."',P_WHATSAPP_EMPRESA_1='".$datosSql['P_WHATSAPP_EMPRESA_1']."',P_IMAIL_EMPRESA='".$datosSql['P_IMAIL_EMPRESA']."',P_PAGINA_WEB_EMPRESA='".$datosSql['P_PAGINA_WEB_EMPRESA']."',P_NOMBRE_APP_EMPRESA='".$datosSql['P_NOMBRE_APP_EMPRESA']."' where idRelacion='".$sessionSql."' ;";
+
+			$var2 = "insert into 02direccionproveedor1 (P_NOMBRE_COMERCIAL_EMPRESA,P_NOMBRE_FISCAL_RS_EMPRESA,P_RFC_MTDP,P_REGIMEN_FISCAL_MTDP,_P_METODO_DE_PAGO,P_FORMADE_PAGO,P_USO_CFDI,FISICA_MORAL,P_DIRECCION_FISCAL_EMPRESA,P_EDIFICIO_EMPRESA,P_CALLE_EMPRESA,P_NUMERO_EXTERIOR_EMPRESA,P_NUMERO_INTERIOR_EMPRESA,P_NUMERO_OFICINA_EMPRESA,P_COLONIA_EMPRESA,P_ALCALDIA_EMPRESA,P_C_P_EMPRESA,P_CIUDAD_EMPRESA,P_ESTADO_EMPRESA,P_PAIS_EMPRESA,dircasa11,P_UBICACION_MAPA_1,P_TELEFONO_1_EMPRESA,P_TELEFONO_2_EMPRESA,P_WHATSAPP_EMPRESA_1,P_IMAIL_EMPRESA,P_PAGINA_WEB_EMPRESA,P_NOMBRE_APP_EMPRESA,idRelacion) values('".$datosSql['P_NOMBRE_COMERCIAL_EMPRESA']."','".$datosSql['P_NOMBRE_FISCAL_RS_EMPRESA']."','".$datosSql['P_RFC_MTDP']."','".$datosSql['P_REGIMEN_FISCAL_MTDP']."','".$datosSql['_P_METODO_DE_PAGO']."','".$datosSql['P_FORMADE_PAGO']."','".$datosSql['P_USO_CFDI']."','".$datosSql['FISICA_MORAL']."','".$datosSql['P_DIRECCION_FISCAL_EMPRESA']."','".$datosSql['P_EDIFICIO_EMPRESA']."','".$datosSql['P_CALLE_EMPRESA']."','".$datosSql['P_NUMERO_EXTERIOR_EMPRESA']."','".$datosSql['P_NUMERO_INTERIOR_EMPRESA']."','".$datosSql['P_NUMERO_OFICINA_EMPRESA']."','".$datosSql['P_COLONIA_EMPRESA']."','".$datosSql['P_ALCALDIA_EMPRESA']."','".$datosSql['P_C_P_EMPRESA']."','".$datosSql['P_CIUDAD_EMPRESA']."','".$datosSql['P_ESTADO_EMPRESA']."','".$datosSql['P_PAIS_EMPRESA']."','".$datosSql['dircasa11']."','".$datosSql['P_UBICACION_MAPA_1']."','".$datosSql['P_TELEFONO_1_EMPRESA']."','".$datosSql['P_TELEFONO_2_EMPRESA']."','".$datosSql['P_WHATSAPP_EMPRESA_1']."','".$datosSql['P_IMAIL_EMPRESA']."','".$datosSql['P_PAGINA_WEB_EMPRESA']."','".$datosSql['P_NOMBRE_APP_EMPRESA']."','".$sessionSql."');";
+
 			if($existe>=1){
 				$datosAnteriores = $this->variable_DIRECCIONP1();
 				$cambios = $this->construir_detalle_cambios($datosAnteriores,$datosNuevos,$mapaCamposBitacora);
 				mysqli_query($conn,$var1) or die('P156'.mysqli_error($conn));
-				mysqli_query($conn,"update 02usuarios set nommbrerazon='".$P_NOMBRE_COMERCIAL_EMPRESA."' where id='".$session."' ;") or die('P156'.mysqli_error($conn));
+				mysqli_query($conn,"update 02usuarios set nommbrerazon='".$datosSql['P_NOMBRE_COMERCIAL_EMPRESA']."' where id='".$sessionSql."' ;") or die('P156'.mysqli_error($conn));
+
 				$detalleBitacora = 'Se actualizó información de dirección y datos fiscales del proveedor.';
 				if(!empty($cambios)) $detalleBitacora .= ' Cambios: '.implode(' | ',$cambios);
 				$this->registrar_bitacora_proveedor($session,'ACTUALIZACION',$detalleBitacora);
 				return "Actualizado";
 			}else{
 				mysqli_query($conn,$var2) or die('P160'.mysqli_error($conn));
-				mysqli_query($conn,"update 02usuarios set nommbrerazon='".$P_NOMBRE_COMERCIAL_EMPRESA."' where id='".$session."' ;") or die('P156'.mysqli_error($conn));
+				mysqli_query($conn,"update 02usuarios set nommbrerazon='".$datosSql['P_NOMBRE_COMERCIAL_EMPRESA']."' where id='".$sessionSql."' ;") or die('P156'.mysqli_error($conn));
+
 				$this->registrar_bitacora_proveedor($session,'INGRESO',
 					'Se registró información inicial de dirección y datos fiscales del proveedor.'
 					.' Nombre comercial: '.$P_NOMBRE_COMERCIAL_EMPRESA
@@ -841,7 +881,20 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 		if($existe==0 || $existe==''){ $variable_check=" checkbox, "; $valor_check=" 'si', "; }
  
 		if($session!=''){
-			$var1="update 02DATOSBANCARIOS1 set P_TIPO_DE_MONEDA_1='".$P_TIPO_DE_MONEDA_1."',P_INSTITUCION_FINANCIERA_1='".$P_INSTITUCION_FINANCIERA_1."',P_NUMERO_DE_CUENTA_DB_1='".$P_NUMERO_DE_CUENTA_DB_1."',P_NUMERO_CLABE_1='".$P_NUMERO_CLABE_1."',P_NUMERO_DE_SUCURSAL_1='".$P_NUMERO_DE_SUCURSAL_1."',P_NUMERO_IBAN_1='".$P_NUMERO_IBAN_1."',P_NUMERO_CUENTA_SWIFT_1='".$P_NUMERO_CUENTA_SWIFT_1."',ULTIMA_CARGA_DATOBANCA='".$ULTIMA_CARGA_DATOBANCA."',OBSERVACIONES_D='".$OBSERVACIONES_D."' where id='".$IPdatosbancario1p."' ;";
+		$var1 = "UPDATE 02DATOSBANCARIOS1 SET
+P_TIPO_DE_MONEDA_1='".$P_TIPO_DE_MONEDA_1."',
+P_INSTITUCION_FINANCIERA_1='".$P_INSTITUCION_FINANCIERA_1."',
+P_NUMERO_DE_CUENTA_DB_1='".$P_NUMERO_DE_CUENTA_DB_1."',
+P_NUMERO_CLABE_1='".$P_NUMERO_CLABE_1."',
+P_NUMERO_DE_SUCURSAL_1='".$P_NUMERO_DE_SUCURSAL_1."',
+P_NUMERO_IBAN_1='".$P_NUMERO_IBAN_1."',
+P_NUMERO_CUENTA_SWIFT_1='".$P_NUMERO_CUENTA_SWIFT_1."',
+FOTO_ESTADO_PROVEE='".$FOTO_ESTADO_PROVEE."',
+ULTIMA_CARGA_DATOBANCA='".$ULTIMA_CARGA_DATOBANCA."',
+OBSERVACIONES_D='".$OBSERVACIONES_D."'
+WHERE id='".$IPdatosbancario1p."' ;";
+			
+			
 			$var2="insert into 02DATOSBANCARIOS1 (P_TIPO_DE_MONEDA_1,P_INSTITUCION_FINANCIERA_1,P_NUMERO_DE_CUENTA_DB_1,P_NUMERO_CLABE_1,P_NUMERO_DE_SUCURSAL_1,P_NUMERO_IBAN_1,P_NUMERO_CUENTA_SWIFT_1,FOTO_ESTADO_PROVEE,ULTIMA_CARGA_DATOBANCA,OBSERVACIONES_D,".$variable_check." idRelacion) values('".$P_TIPO_DE_MONEDA_1."','".$P_INSTITUCION_FINANCIERA_1."','".$P_NUMERO_DE_CUENTA_DB_1."','".$P_NUMERO_CLABE_1."','".$P_NUMERO_DE_SUCURSAL_1."','".$P_NUMERO_IBAN_1."','".$P_NUMERO_CUENTA_SWIFT_1."','".$FOTO_ESTADO_PROVEE."','".$ULTIMA_CARGA_DATOBANCA."','".$OBSERVACIONES_D."',".$valor_check." '".$session."');";
  
 			if($ENVIARRdatosbancario1p=='ENVIARRdatosbancario1p'){

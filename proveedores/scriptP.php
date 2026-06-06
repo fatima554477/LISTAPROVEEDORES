@@ -1,4 +1,4 @@
-	<div id="add_data_Modal" class="modal fade">
+<div id="add_data_Modal" class="modal fade">
  <div class="modal-dialog">
   <div class="modal-content">
    <div class="modal-header">
@@ -1016,8 +1016,11 @@ $('#mensajePRESENTACIONP').html("<span id='ACTUALIZADO' >"+data+"</span>").fadeI
 
 
 /*LISTO enviarDIRECEP*/
-	$("#enviarDIRECEP").click(function(){
-		var formulario = $("#PDIRECEMPRE1form").serializeArray();
+	
+	$(document).on("click", "#enviarDIRECEP", function(){
+
+		var formulario = $(this).closest("form").serializeArray();
+
 			$.ajax({
 			type: "POST",
 			url: "proveedores/controladorP.php",
@@ -1026,8 +1029,9 @@ $('#mensajePRESENTACIONP').html("<span id='ACTUALIZADO' >"+data+"</span>").fadeI
 
 			//$("#mensajeADJUNTOCOL").html(respuesta);
 			if($.trim(respuesta)=='Ingresado' || $.trim(respuesta)=='Actualizado'){
-			$('#target10').hide("linear");
-			$("#mensajeDIRECEP").load(location.href + " #mensajeDIRECEP");
+	
+			$("#mensajeDIRECEP").html(respuesta).fadeIn().delay(2000).fadeOut();
+			$("#mensajeDIRECEP").load(location.href + " #mensajeDIRECEP>*");
 			}else{
 			$("#mensajeDIRECEP").html(respuesta);				
 			}
