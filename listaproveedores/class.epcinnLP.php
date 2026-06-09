@@ -52,7 +52,7 @@ PROGRAMER
 	   ───────────────────────────────────────── */
 	public function listado2(){
 		$conn = $this->db();
-		$var = 'select *,02usuarios.id AS IDDD from 02usuarios left join 02direccionproveedor1 on 02usuarios.id = 02direccionproveedor1.idRelacion order by nommbrerazon asc';		
+		$var = 'select *,02usuarios.id AS IDDD from 02usuarios left join (select d.* from 02direccionproveedor1 d inner join (select idRelacion, max(id) as max_id from 02direccionproveedor1 group by idRelacion) dx on dx.idRelacion = d.idRelacion and dx.max_id = d.id) as 02direccionproveedor1 on 02usuarios.id = 02direccionproveedor1.idRelacion order by nommbrerazon asc';		
 		$query = mysqli_query($conn,$var);
 		echo "<table class='table mb-0 table-striped'><tr>
 		<td>usuario</td>
@@ -78,15 +78,13 @@ PROGRAMER
  
 	public function listado3(){
 		$conn = $this->db();
-		$var = 'select *,02usuarios.id AS IDDD from 02usuarios left join 02direccionproveedor1 on 02usuarios.id = 02direccionproveedor1.idRelacion order by nommbrerazon asc';
+		$var = 'select *,02usuarios.id AS IDDD from 02usuarios left join (select d.* from 02direccionproveedor1 d inner join (select idRelacion, max(id) as max_id from 02direccionproveedor1 group by idRelacion) dx on dx.idRelacion = d.idRelacion and dx.max_id = d.id) as 02direccionproveedor1 on 02usuarios.id = 02direccionproveedor1.idRelacion order by nommbrerazon asc';
 		RETURN $query = mysqli_query($conn,$var);
 	}	
 	
 	public function variablesusuario2($id){
 		$conn = $this->db();
-		$var2 = 'select *,02usuarios.id AS IDDD from 02usuarios, 02direccionproveedor1 where 
-		02usuarios.id = 02direccionproveedor1.idRelacion and 
-		02usuarios.id = "'.$id.'" ';		
+		$var2 = 'select *,02usuarios.id AS IDDD from 02usuarios left join (select d.* from 02direccionproveedor1 d inner join (select idRelacion, max(id) as max_id from 02direccionproveedor1 group by idRelacion) dx on dx.idRelacion = d.idRelacion and dx.max_id = d.id) as 02direccionproveedor1 on 02usuarios.id = 02direccionproveedor1.idRelacion where 02usuarios.id = "'.$id.'" ';		
 		$query = mysqli_query($conn,$var2);
 		return $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
 	}
@@ -153,8 +151,7 @@ PROGRAMER
  
 	public function revisar_02TODOS($usuario,$nommbrerazon,$rfc,$P_NOMBRE_FISCAL_RS_EMPRESA){
 		$conn = $this->db();
-		$var1 = 'select *,02usuarios.id AS IDDD from  02usuarios, 02direccionproveedor1 WHERE 
-		02usuarios.id = 02direccionproveedor1.idRelacion and 
+		$var1 = 'select *,02usuarios.id AS IDDD from 02usuarios left join (select d.* from 02direccionproveedor1 d inner join (select idRelacion, max(id) as max_id from 02direccionproveedor1 group by idRelacion) dx on dx.idRelacion = d.idRelacion and dx.max_id = d.id) as 02direccionproveedor1 on 02usuarios.id = 02direccionproveedor1.idRelacion WHERE 
 		02usuarios.usuario= "'.$usuario.'" and
 		02usuarios.nommbrerazon="'.$nommbrerazon.'" and 
 		02direccionproveedor1.P_RFC_MTDP= "'.$rfc.'" and 
@@ -184,7 +181,7 @@ PROGRAMER
 				COALESCE(d.P_NOMBRE_COMERCIAL_EMPRESA, u.nommbrerazon, CONCAT('Proveedor #', b.id_proveedor)) AS nombre_comercial
 			FROM 02PROVEEDORES_BITACORA b
 			LEFT JOIN 02usuarios u ON u.id = b.id_proveedor
-			LEFT JOIN 02direccionproveedor1 d ON d.idRelacion = b.id_proveedor
+			LEFT JOIN (select d.* from 02direccionproveedor1 d inner join (select idRelacion, max(id) as max_id from 02direccionproveedor1 group by idRelacion) dx on dx.idRelacion = d.idRelacion and dx.max_id = d.id) d ON d.idRelacion = b.id_proveedor
 			WHERE b.id_proveedor = '".$idProveedor."'
 			ORDER BY b.fecha_hora DESC, b.id DESC
 			LIMIT 200
