@@ -20,7 +20,10 @@ $borra_listadoP = isset($_POST["borra_listadoP"])?$_POST["borra_listadoP"]:"";
 $DUPLICAR_servicios = isset($_POST["DUPLICAR_servicios"])?$_POST["DUPLICAR_servicios"]:"";
 if($DUPLICAR_servicios=='DUPLICAR_servicios'){
 	$DUPLICAR_id_servis = isset($_POST["DUPLICAR_id_servis"])?$_POST["DUPLICAR_id_servis"]:"";
-	$proveedoresC->duplica($DUPLICAR_id_servis);
+		$DUPLICAR_usuario = isset($_POST["DUPLICAR_usuario"])?$_POST["DUPLICAR_usuario"]:"";
+
+	$proveedoresC->duplica($DUPLICAR_id_servis, $DUPLICAR_usuario);
+
 }
 
 if($validaLISTADO == 'validaLISTADO'){

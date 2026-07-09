@@ -34,6 +34,8 @@ color:red;
       <div class="table-responsive">  
            <table class="table table-bordered" style="background-color: #d8f8ff;" >';
 	$row = mysqli_fetch_array($queryVISTAPREV);
+	$usuarioSugerido = htmlspecialchars($row["usuario"].'_DUP'.$row["IDDD"], ENT_QUOTES, 'UTF-8');
+
 
 
      $output .= '
@@ -50,8 +52,22 @@ color:red;
 
 
 <tr>
-<td width="50%"><label>USUARIO CRM:</label></td>
-<td width="50%">AdminPR_'.$row["usuario"].'</td>
+<td width="50%"><label>USUARIO CRM PARA EL DUPLICADO:</label></td>
+
+<td width="50%">
+
+	<div class="input-group">
+
+		<span class="input-group-text">AdminPR_</span>
+
+		<input type="text" class="form-control" name="DUPLICAR_usuario" id="DUPLICAR_usuario" value="'.$usuarioSugerido.'" required>
+
+	</div>
+
+	<small>Modifica este usuario antes de duplicar para que no se repita con otro proveedor.</small>
+
+</td>
+
 </tr>  
 
 
@@ -106,7 +122,8 @@ $("#clickLP").click(function(){
 			$('#respuestaLP_').html('cargando'); 
 		}, 	
 		success:function(data){
-			if($.trim(data)=='PROVEEDOR DUPLICADO' || $.trim(data)=='ACTUALIZADO'){
+				if($.trim(data).indexOf('PROVEEDOR DUPLICADO')===0 || $.trim(data)=='ACTUALIZADO'){
+
 					$('#dataModal').modal('hide');
 	$.getScript(load(1));
 					$("#respuestaLP_").html("<span id='ACTUALIZADO' >"+data+"</span>");

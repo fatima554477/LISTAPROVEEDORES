@@ -140,7 +140,76 @@ PROGRAMER
 		$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
 		return $row['id'];
 	}	
- 
+ private function existe_usuario_en_otro_proveedor($usuario, $idActual = 0){
+
+		$conn = $this->db();
+
+		$usuario = mysqli_real_escape_string($conn, trim($usuario));
+
+		$idActual = (int)$idActual;
+
+
+
+		if($usuario === ''){
+
+			return false;
+
+		}
+
+
+
+		$query = mysqli_query(
+
+			$conn,
+
+			"SELECT id FROM 02usuarios WHERE usuario = '".$usuario."' AND id <> '".$idActual."' LIMIT 1"
+
+		) or die('P44'.mysqli_error($conn));
+
+
+
+		return mysqli_num_rows($query) > 0;
+
+	}
+
+
+
+	private function generar_usuario_unico_duplicado($usuarioBase, $idOrigen){
+
+		$usuarioBase = trim($usuarioBase);
+
+		$idOrigen = (int)$idOrigen;
+
+
+
+		if($usuarioBase === ''){
+
+			$usuarioBase = 'proveedor_'.$idOrigen;
+
+		}
+
+
+
+		$candidato = $usuarioBase.'_DUP'.$idOrigen;
+
+		$contador = 2;
+
+
+
+		while($this->existe_usuario_en_otro_proveedor($candidato, 0)){
+
+			$candidato = $usuarioBase.'_DUP'.$idOrigen.'_'.$contador;
+
+			$contador++;
+
+		}
+
+
+
+		return $candidato;
+
+	}
+
 	public function revisar_02campo($tabla,$campo,$valor){
 		$conn = $this->db();
 		$var1 = 'select id from '.$tabla.' where '.$campo.' =  "'.$valor.'" ';
@@ -494,6 +563,13 @@ PROGRAMER
 		$P_RFC_MTDPSql = mysqli_real_escape_string($conn, $P_RFC_MTDP);
 
 		$usuarioSql = mysqli_real_escape_string($conn, trim($usuario));
+		
+			if($this->existe_usuario_en_otro_proveedor($usuario, $IDSql)){
+
+			return "ERROR: EL USUARIO CRM YA EXISTE EN OTRO PROVEEDOR. CAPTURA UN USUARIO DIFERENTE PARA EVITAR CONFUSIÓN AL INGRESAR.";
+
+		}
+
 
  
 		// ── Datos anteriores para detectar cambios ────────────────────────────
@@ -609,7 +685,8 @@ PROGRAMER
 	/* ─────────────────────────────────────────
 	   DUPLICAR PROVEEDOR
 	   ───────────────────────────────────────── */
-	public function duplica($id){
+	public function duplica($id, $usuarioDuplicado = ''){
+
 		$conn = $this->db();
 		$id   = (int)$id;
  
@@ -620,7 +697,28 @@ PROGRAMER
 			return;
 		}
  
-		$usuario      = mysqli_real_escape_string($conn, $row['usuario']);
+	$usuarioDuplicado = trim($usuarioDuplicado);
+
+		if($usuarioDuplicado === ''){
+
+			$usuarioDuplicado = $this->generar_usuario_unico_duplicado($row['usuario'], $id);
+
+		}
+
+
+
+		if($this->existe_usuario_en_otro_proveedor($usuarioDuplicado, 0)){
+
+			echo "ERROR: EL USUARIO CRM YA EXISTE EN OTRO PROVEEDOR. CAPTURA UN USUARIO DIFERENTE PARA DUPLICAR.";
+
+			return;
+
+		}
+
+
+
+		$usuario      = mysqli_real_escape_string($conn, $usuarioDuplicado);
+
 		$nommbrerazon = mysqli_real_escape_string($conn, $row['nommbrerazon']);
 		$contrasenia  = mysqli_real_escape_string($conn, $row['contrasenia']);
 		$email        = mysqli_real_escape_string($conn, $row['email']);
@@ -671,7 +769,8 @@ PROGRAMER
 			'Este proveedor fue duplicado. Nuevo proveedor generado con ID:'.$idwebc.'.'
 		);
  
-		echo "PROVEEDOR DUPLICADO";
+		echo "PROVEEDOR DUPLICADO CON USUARIO CRM: AdminPR_".$usuario;
+
 	}
  
 	} // fin clase
