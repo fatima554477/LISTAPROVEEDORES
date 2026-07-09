@@ -21,8 +21,10 @@ $DUPLICAR_servicios = isset($_POST["DUPLICAR_servicios"])?$_POST["DUPLICAR_servi
 if($DUPLICAR_servicios=='DUPLICAR_servicios'){
 	$DUPLICAR_id_servis = isset($_POST["DUPLICAR_id_servis"])?$_POST["DUPLICAR_id_servis"]:"";
 		$DUPLICAR_usuario = isset($_POST["DUPLICAR_usuario"])?$_POST["DUPLICAR_usuario"]:"";
+		$DUPLICAR_nombre_comercial = isset($_POST["DUPLICAR_nombre_comercial"])?$_POST["DUPLICAR_nombre_comercial"]:"";
 
-	$proveedoresC->duplica($DUPLICAR_id_servis, $DUPLICAR_usuario);
+$proveedoresC->duplica($DUPLICAR_id_servis, $DUPLICAR_usuario, $DUPLICAR_nombre_comercial);
+
 
 }
 

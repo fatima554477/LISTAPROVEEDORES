@@ -34,16 +34,21 @@ color:red;
       <div class="table-responsive">  
            <table class="table table-bordered" style="background-color: #d8f8ff;" >';
 	$row = mysqli_fetch_array($queryVISTAPREV);
-	$usuarioSugerido = htmlspecialchars($row["usuario"].'_DUP'.$row["IDDD"], ENT_QUOTES, 'UTF-8');
+	$usuarioSugerido = htmlspecialchars($row["usuario"].$row["IDDD"], ENT_QUOTES, 'UTF-8');
+		$nombreComercialOriginal = htmlspecialchars($row["nommbrerazon"], ENT_QUOTES, 'UTF-8');
+
 
 
 
      $output .= '
 <tr>
 <td width="50%"><label>NOMBRE COMERCIAL DEL  PROVEEDOR:</label></td>
-<td width="50%">'.$row["nommbrerazon"].'</td>
-</tr>  
-
+<td width="50%">
+	<input type="text" class="form-control" name="DUPLICAR_nombre_comercial" id="DUPLICAR_nombre_comercial" value="'.$nombreComercialOriginal.'" required>
+	<input type="hidden" value="'.$nombreComercialOriginal.'" name="DUPLICAR_nombre_comercial_original" id="DUPLICAR_nombre_comercial_original">
+	<small style="color:red; font-size:10px;">CAPTURA UN NOMBRE COMERCIAL DIFERENTE AL PROVEEDOR ORIGINAL.</small>
+</td>
+</tr>
 <tr>
 <td width="50%"><label>RAZÓN SOCIAL DEL PROVEEDOR:</label></td>
 <td width="50%">'.$row["P_NOMBRE_FISCAL_RS_EMPRESA"].'</td>
@@ -64,7 +69,7 @@ color:red;
 
 	</div>
 
-	<small>Modifica este usuario antes de duplicar para que no se repita con otro proveedor.</small>
+	
 
 </td>
 

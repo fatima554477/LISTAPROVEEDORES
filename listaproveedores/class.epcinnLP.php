@@ -167,6 +167,73 @@ PROGRAMER
 		) or die('P44'.mysqli_error($conn));
 
 
+	return mysqli_num_rows($query) > 0;
+
+
+
+	}
+
+
+
+	private function existe_nombre_comercial_en_otro_proveedor($nommbrerazon, $idActual = 0){
+
+
+
+		$conn = $this->db();
+
+
+
+		$nommbrerazon = mysqli_real_escape_string($conn, trim($nommbrerazon));
+
+
+
+		$idActual = (int)$idActual;
+
+
+
+
+
+
+
+		if($nommbrerazon === ''){
+
+
+
+			return false;
+
+
+
+		}
+
+
+
+
+
+
+
+		$query = mysqli_query(
+
+
+
+			$conn,
+
+
+
+			"SELECT u.id
+
+			FROM 02usuarios u
+
+			LEFT JOIN 02direccionproveedor1 d ON u.id = d.idRelacion
+
+			WHERE u.id <> '".$idActual."'
+
+			AND (TRIM(u.nommbrerazon) = '".$nommbrerazon."' OR TRIM(d.P_NOMBRE_COMERCIAL_EMPRESA) = '".$nommbrerazon."')
+
+			LIMIT 1"
+
+
+
+		) or die('P44'.mysqli_error($conn));
 
 		return mysqli_num_rows($query) > 0;
 
@@ -570,6 +637,16 @@ PROGRAMER
 
 		}
 
+        
+		if($this->existe_nombre_comercial_en_otro_proveedor($nommbrerazon, $IDSql)){
+
+
+
+			return "ERROR: EL NOMBRE COMERCIAL DEL PROVEEDOR YA EXISTE EN OTRO PROVEEDOR. CAPTURA UN NOMBRE COMERCIAL DIFERENTE PARA EVITAR DUPLICADOS.";
+
+
+
+		}
 
  
 		// ── Datos anteriores para detectar cambios ────────────────────────────
@@ -685,7 +762,8 @@ PROGRAMER
 	/* ─────────────────────────────────────────
 	   DUPLICAR PROVEEDOR
 	   ───────────────────────────────────────── */
-	public function duplica($id, $usuarioDuplicado = ''){
+	public function duplica($id, $usuarioDuplicado = '', $nombreComercialDuplicado = ''){
+
 
 		$conn = $this->db();
 		$id   = (int)$id;
@@ -715,11 +793,61 @@ PROGRAMER
 
 		}
 
+	$nombreComercialDuplicado = trim($nombreComercialDuplicado);
+
+
+
+		if($nombreComercialDuplicado === ''){
+
+
+
+			echo "ERROR: CAPTURA UN NOMBRE COMERCIAL DIFERENTE PARA DUPLICAR.";
+
+
+
+			return;
+
+
+
+		}
+
+
+
+		if(strcasecmp(trim($row['nommbrerazon']), $nombreComercialDuplicado) === 0){
+
+
+
+	echo "ERROR: NO PUEDES DUPLICAR CON EL MISMO NOMBRE COMERCIAL. CAPTURA UN NOMBRE COMERCIAL DIFERENTE.";
+
+
+
+			return;
+
+
+
+		}
+
+
+
+		if($this->existe_nombre_comercial_en_otro_proveedor($nombreComercialDuplicado, 0)){
+
+
+
+			echo "ERROR: EL NOMBRE COMERCIAL DEL PROVEEDOR YA EXISTE EN OTRO PROVEEDOR. CAPTURA UN NOMBRE COMERCIAL DIFERENTE PARA EVITAR DUPLICADOS.";
+
+
+
+			return;
+
+
+
+		}
 
 
 		$usuario      = mysqli_real_escape_string($conn, $usuarioDuplicado);
 
-		$nommbrerazon = mysqli_real_escape_string($conn, $row['nommbrerazon']);
+	$nommbrerazon = mysqli_real_escape_string($conn, $nombreComercialDuplicado);
+
 		$contrasenia  = mysqli_real_escape_string($conn, $row['contrasenia']);
 		$email        = mysqli_real_escape_string($conn, $row['email']);
  
@@ -739,7 +867,8 @@ PROGRAMER
 		$row2 = mysqli_fetch_array($queryejecuta2, MYSQLI_ASSOC);
  
 		if($row2){
-			$nombreComercial = mysqli_real_escape_string($conn, $row2['P_NOMBRE_COMERCIAL_EMPRESA']);
+		$nombreComercial = mysqli_real_escape_string($conn, $nombreComercialDuplicado);
+
 			$razonSocial     = mysqli_real_escape_string($conn, $row2['P_NOMBRE_FISCAL_RS_EMPRESA']);
 			$rfc             = mysqli_real_escape_string($conn, $row2['P_RFC_MTDP']);
  
@@ -760,7 +889,8 @@ PROGRAMER
 		$this->registrar_bitacora_proveedor(
 			$idwebc,
 			'INGRESO',
-			'Proveedor creado por duplicación del proveedor ID:'.$id.' ("'.$nommbrerazon.'").'
+					'Proveedor creado por duplicación del proveedor ID:'.$id.' ("'.$row['nommbrerazon'].'") con nombre comercial "'.$nombreComercialDuplicado.'".'
+
 		);
 		// Registro en el proveedor ORIGEN
 		$this->registrar_bitacora_proveedor(
