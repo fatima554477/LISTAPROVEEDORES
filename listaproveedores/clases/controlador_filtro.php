@@ -39,6 +39,9 @@ if ($action == "bitacora_proveedor") {
 }
 if ($action == "ajax") {
 
+    // FIX: iniciar buffer de salida para evitar que warnings rompan la respuesta AJAX
+    ob_start();
+
     require(__ROOT6__."/class.filtro.php");
     include(__ROOT1__."/../includes/convertirma.php");
     $database = new orders();	
@@ -101,6 +104,9 @@ if ($action == "ajax") {
         $numrows = 0;
     }	
     $total_pages = ceil($numrows / $per_page);
+
+    // FIX: limpiar cualquier warning/notice que haya podido generarse antes de imprimir HTML
+    ob_clean();
 	
 	
     //Recorrer los datos recuperados
@@ -230,20 +236,33 @@ echo $convenio; ?>">--></td>
 				
         </tr>			
     </thead>
-    <?php 	if ($numrows < 0) { ?>
+
+    <?php
+    // FIX: verificar que $datos sea válido y tenga resultados antes de iterar
+    if ($numrows <= 0 || $datos === false || $datos->num_rows == 0) {
+    ?>
+        <tbody>
+            <tr>
+                <td colspan="20" style="text-align:center; padding:30px; color:#888;">
+                    <div style="font-size:16px; margin-bottom:8px;">🔍 Sin resultados</div>
+                    <div style="font-size:13px;">No se encontraron proveedores con los filtros aplicados. Intenta con otros términos de búsqueda.</div>
+                </td>
+            </tr>
+        </tbody>
         </table>
-    <?php } else { ?>		
+        </div>
+    <?php
+    } else {
+    ?>
     <tbody>
     <?php
         $finales = 0;
-       foreach ($datos as $key => $row) {
+        foreach ($datos as $key => $row) {
             $query_producots = $database->todos_productosservicios($row['IDDDDDD']);
             $query_contactos = $database->contactospro($row['IDDDDDD']);
             $query_contactoCEL = $database->contactoCELpro($row['IDDDDDD']);
             $datos_convenio = $database->datos_convenio($row['IDDDDDD']);
             $datos_convemio = $database->convenionuevo($row['IDDDDDD']);
-  
-            
     ?>
      		 <tr style="background:#FFFFFF">
 		 						<td>
@@ -323,7 +342,12 @@ echo $convenio; ?>">--></td>
                     <input type="button" name="view" value="MODIFICAR" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-info btn-xs view_LP" />
                   
                 </td>
-            <?php } 
+            <?php }
+            if($database->variablespermisos('','listadoDUPLI','ver')=='si'){ ?>
+                <td>
+                    <input type="button" name="view" value="DUPLICAR" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-info btn-xs view_DUPLICAR" />
+                </td>
+            <?php } 			
             if($database->variablespermisos('','listadoP ','borrar')=='si'){ ?>
                 <td>
                     <input type="button" name="view" value="BORRAR" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-info btn-xs view_BORRARLP" />
@@ -332,7 +356,7 @@ echo $convenio; ?>">--></td>
         </tr>
     <?php
         $finales++;
-        }	
+        }
     ?>
     </tbody>
     </table>
@@ -346,6 +370,6 @@ echo $convenio; ?>">--></td>
         ?>
     </div>
     <?php
-    }
+    } // FIX: cierre del else (hay resultados)
 }
 ?>

@@ -88,6 +88,19 @@ function _bitacoraIcon(path) {
 	return '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="' + path + '"/></svg>';
 }
 
+function _bitacoraDetalleHtml(detalle) {
+	var texto = (detalle || '').toString();
+	if (!texto.trim()) return '<div class="small text-secondary mb-1">Sin descripción</div>';
+	var partes = texto.split(' | ');
+	if (partes.length <= 1) return '<div class="small text-secondary mb-1">' + texto + '</div>';
+	var html = '<div class="small text-secondary mb-1">' + partes[0] + '</div><ul class="small text-secondary mb-1 ps-3">';
+	for (var i = 1; i < partes.length; i++) {
+		html += '<li>' + partes[i] + '</li>';
+	}
+	html += '</ul>';
+	return html;
+}
+
 $(document).on('click', '.view_BITACORA_PROV', function () {
 	var idProveedor = $(this).attr("id");
 	if (!idProveedor) return;
@@ -125,7 +138,8 @@ $(document).on('click', '.view_BITACORA_PROV', function () {
         var initials = _bitacoraInitials(usuario);
 
         // Detalle enriquecido con fecha formateada y usuario resaltado
-        var detalleHtml = '<div class="small text-secondary mb-1">' + (d.detalle || 'Sin descripción') + '</div>'
+        var detalleHtml = _bitacoraDetalleHtml(d.detalle)
+
           
 
         html += '<div class="d-flex gap-3">'
