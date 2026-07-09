@@ -241,6 +241,25 @@ PROGRAMER
  
 		$conexion = new herramientas();
 		$conn = $this->db();
+		
+		// Valores escapados para las consultas de escritura. Se conservan las
+
+		// variables originales para validaciones, correo y texto de bitácora.
+
+		$usuarioSql = mysqli_real_escape_string($conn, trim($usuario));
+
+		$nommbrerazonSql = mysqli_real_escape_string($conn, trim($nommbrerazon));
+
+		$P_NOMBRE_FISCAL_RS_EMPRESASql = mysqli_real_escape_string($conn, trim($P_NOMBRE_FISCAL_RS_EMPRESA));
+
+		$contraseniaSql = mysqli_real_escape_string($conn, $contrasenia);
+
+		$emailSql = mysqli_real_escape_string($conn, trim($email));
+
+		$rfcSql = mysqli_real_escape_string($conn, trim($rfc));
+
+		$idEmpresaSql = mysqli_real_escape_string($conn, $id_empresa);
+
  
 		// ── Validaciones de unicidad ──────────────────────────────────────────
 		if($this->revisar_02TODOS($usuario,$nommbrerazon,$rfc,$P_NOMBRE_FISCAL_RS_EMPRESA)>=1){}else{
@@ -297,10 +316,14 @@ PROGRAMER
 		if($existe1>=1){
 			mysqli_query($conn, "update 02usuarios set
 			PERMISOS = 'PROVEEDORES',
-			usuario = '".$usuario."' , 
-			nommbrerazon = '".$nommbrerazon."' ,
-			contrasenia = '".$contrasenia."' ,
-			email = '".$email."' where id = '".$existe1."' ; ") or die('P156'.mysqli_error($conn));
+	        usuario = '".$usuarioSql."' , 
+
+			nommbrerazon = '".$nommbrerazonSql."' ,
+
+			contrasenia = '".$contraseniaSql."' ,
+
+			email = '".$emailSql."' where id = '".$existe1."' ; ") or die('P156'.mysqli_error($conn));
+
 			$idwebc = $existe1;
  
 			// ── BITÁCORA: actualización de datos generales ────────────────────
@@ -319,10 +342,14 @@ PROGRAMER
 			usuario, nommbrerazon,
 			contrasenia, email, PERMISOS) values (
 			'AdminPR',
-			'".$usuario."' , 
-			'".$nommbrerazon."' , 
-			'".$contrasenia."' , 
-			'".$email."', 'PROVEEDORES'
+			'".$usuarioSql."' , 
+
+			'".$nommbrerazonSql."' , 
+
+			'".$contraseniaSql."' , 
+
+			'".$emailSql."', 'PROVEEDORES'
+
 			); ") or die('P160'.mysqli_error($conn));
 			$idwebc = mysqli_insert_id($conn);
 		}
@@ -332,9 +359,12 @@ PROGRAMER
  
 		if($existe2>=1){
 			mysqli_query($conn,"update 02direccionproveedor1 set 
-			P_RFC_MTDP = '".$rfc."' ,
-			P_NOMBRE_COMERCIAL_EMPRESA = '".$nommbrerazon."',
-			P_NOMBRE_FISCAL_RS_EMPRESA = '".$P_NOMBRE_FISCAL_RS_EMPRESA."' where idRelacion = '".$idwebc."' ; ") or die('P156'.mysqli_error($conn));
+				P_RFC_MTDP = '".$rfcSql."' ,
+
+			P_NOMBRE_COMERCIAL_EMPRESA = '".$nommbrerazonSql."',
+
+			P_NOMBRE_FISCAL_RS_EMPRESA = '".$P_NOMBRE_FISCAL_RS_EMPRESASql."' where idRelacion = '".$idwebc."' ; ") or die('P156'.mysqli_error($conn));
+
  
 			// ── BITÁCORA: actualización de datos fiscales ─────────────────────
 			$this->registrar_bitacora_proveedor(
@@ -353,10 +383,12 @@ PROGRAMER
 			}
 		}else{
 			// Primera vez: registrar empresa y dirección
-			$this->PROVEEDOREMPRESA($idwebc,$id_empresa);
+			$this->PROVEEDOREMPRESA($idwebc,$idEmpresaSql);
+
 			mysqli_query($conn,"insert into 02direccionproveedor1 
 			( P_NOMBRE_COMERCIAL_EMPRESA, P_NOMBRE_FISCAL_RS_EMPRESA, idRelacion, P_RFC_MTDP) values 
-			( '".$nommbrerazon."' ,'".$P_NOMBRE_FISCAL_RS_EMPRESA."' , '".$idwebc."','".$rfc."'  ); ") or die('P160'.mysqli_error($conn));
+			( '".$nommbrerazonSql."' ,'".$P_NOMBRE_FISCAL_RS_EMPRESASql."' , '".$idwebc."','".$rfcSql."'  ); ") or die('P160'.mysqli_error($conn));
+
  
 			// ── BITÁCORA: ingreso nuevo proveedor ─────────────────────────────
 			$this->registrar_bitacora_proveedor(
@@ -449,33 +481,60 @@ PROGRAMER
 		$nommbrerazon            = trim($nommbrerazon);
 		$P_NOMBRE_FISCAL_RS_EMPRESA = trim($P_NOMBRE_FISCAL_RS_EMPRESA);
 		$P_RFC_MTDP              = trim($P_RFC_MTDP);
+			$IDSql = mysqli_real_escape_string($conn, $ID);
+
+		$emailSql = mysqli_real_escape_string($conn, trim($email));
+
+		$contraseniaSql = mysqli_real_escape_string($conn, $contrasenia);
+
+		$nommbrerazonSql = mysqli_real_escape_string($conn, $nommbrerazon);
+
+		$P_NOMBRE_FISCAL_RS_EMPRESASql = mysqli_real_escape_string($conn, $P_NOMBRE_FISCAL_RS_EMPRESA);
+
+		$P_RFC_MTDPSql = mysqli_real_escape_string($conn, $P_RFC_MTDP);
+
+		$usuarioSql = mysqli_real_escape_string($conn, trim($usuario));
+
  
 		// ── Datos anteriores para detectar cambios ────────────────────────────
 		$rowAnterior = mysqli_fetch_array(
-			mysqli_query($conn, "SELECT nommbrerazon, email, usuario FROM 02usuarios WHERE id = '".$ID."' "),
+			
+			mysqli_query($conn, "SELECT nommbrerazon, email, usuario FROM 02usuarios WHERE id = '".$IDSql."' "),
+
 			MYSQLI_ASSOC
 		);
 		$rowDirAnterior = mysqli_fetch_array(
-			mysqli_query($conn, "SELECT P_NOMBRE_FISCAL_RS_EMPRESA, P_RFC_MTDP FROM 02direccionproveedor1 WHERE idRelacion = '".$ID."' "),
+					mysqli_query($conn, "SELECT P_NOMBRE_FISCAL_RS_EMPRESA, P_RFC_MTDP FROM 02direccionproveedor1 WHERE idRelacion = '".$IDSql."' "),
+
 			MYSQLI_ASSOC
 		);
  
 		// ── UPDATE 02usuarios ─────────────────────────────────────────────────
 		mysqli_query($conn, "update 02usuarios set
-		contrasenia = '".$contrasenia."' ,
-		email = '".$email."',
-		nommbrerazon = '".$nommbrerazon."',
-		usuario = '".$usuario."'
-		where id = '".$ID."' ; ") or die('P156'.mysqli_error($conn));
+	contrasenia = '".$contraseniaSql."' ,
+
+		email = '".$emailSql."',
+
+		nommbrerazon = '".$nommbrerazonSql."',
+
+		usuario = '".$usuarioSql."'
+
+		where id = '".$IDSql."' ; ") or die('P156'.mysqli_error($conn));
+
  
 		// ── UPDATE / INSERT 02direccionproveedor1 ─────────────────────────────
-		$direccionQuery = mysqli_query($conn, "select idRelacion from 02direccionproveedor1 where idRelacion = '".$ID."' ");
+			$direccionQuery = mysqli_query($conn, "select idRelacion from 02direccionproveedor1 where idRelacion = '".$IDSql."' ");
+
 		if(mysqli_num_rows($direccionQuery) > 0){
 			mysqli_query($conn, "update 02direccionproveedor1 set
-			P_NOMBRE_COMERCIAL_EMPRESA = '".$nommbrerazon."',
-			P_NOMBRE_FISCAL_RS_EMPRESA = '".$P_NOMBRE_FISCAL_RS_EMPRESA."',
-			P_RFC_MTDP = '".$P_RFC_MTDP."'
-			where idRelacion = '".$ID."' ; ") or die('P156'.mysqli_error($conn));
+		P_NOMBRE_COMERCIAL_EMPRESA = '".$nommbrerazonSql."',
+
+			P_NOMBRE_FISCAL_RS_EMPRESA = '".$P_NOMBRE_FISCAL_RS_EMPRESASql."',
+
+			P_RFC_MTDP = '".$P_RFC_MTDPSql."'
+
+			where idRelacion = '".$IDSql."' ; ") or die('P156'.mysqli_error($conn));
+
 		}else{
 			mysqli_query($conn, "insert into 02direccionproveedor1 (
 			idRelacion,
@@ -483,10 +542,14 @@ PROGRAMER
 			P_NOMBRE_FISCAL_RS_EMPRESA,
 			P_RFC_MTDP
 			) values (
-			'".$ID."',
-			'".$nommbrerazon."',
-			'".$P_NOMBRE_FISCAL_RS_EMPRESA."',
-			'".$P_RFC_MTDP."'
+		'".$IDSql."',
+
+			'".$nommbrerazonSql."',
+
+			'".$P_NOMBRE_FISCAL_RS_EMPRESASql."',
+
+			'".$P_RFC_MTDPSql."'
+
 			); ") or die('P156'.mysqli_error($conn));
 		}
  
