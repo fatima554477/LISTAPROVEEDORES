@@ -37,9 +37,13 @@
 
 <td width="30%" align="center">					
 	<button  class="btn btn-sm btn-outline-success px-5" type="button" onclick="load2(1);" >BUSCAR</button>
+	    &nbsp;
+	
+    <button class="btn btn-sm btn-outline-danger px-4" type="button" onclick="limpiarFiltroProductosServicios();">🧹 LIMPIAR FILTRO</button>
+
 </td>
 
-<td width="30%" align="center" style="text-transform: uppercase;">
+<td width="30%" align="center" style="text-transform: uppercase;">    
 	<span>PLANTILLA</span>
 	<?php
 	$encabezado = '';$option='';
