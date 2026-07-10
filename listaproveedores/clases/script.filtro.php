@@ -67,6 +67,45 @@ var CONVENIO_PROVEEDOR=$("#CONVENIO_PROVEEDOR_1").val();
 			})
 		}
 /* terminaB1*/		
+function limpiarFiltroProveedores(){
+
+	var campos = [
+
+		"#NOMBRE_EVENTO",
+
+		"#nommbrerazon_1",
+
+		"#P_NOMBRE_FISCAL_RS_EMPRESA_1",
+
+		"#P_RFC_MTDP_1",
+
+		"#usuario_1",
+
+		"#contrasenia_1",
+
+		"#email_1",
+
+		"#validaLISTADO_1",
+
+		"#P_TELEFONO_1_EMPRESA",
+
+		"#CIUDAD_SERVICIO",
+
+		"#PAIS_SERVICIO",
+
+		"#PCONTACTADO_POR",
+
+		"#PRODUCTO_O_SERVICIO_9_1",
+
+		"#CONVENIO_PROVEEDOR_1"
+
+	];
+
+	$(campos.join(',')).val('');
+
+	load(1);
+
+}
 
 function _bitacoraBadgeCfg(tipo) {
 	var t = (tipo || '').toUpperCase();
