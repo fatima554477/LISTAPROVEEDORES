@@ -2,7 +2,6 @@
 
 /**
  	--------------------------
-	Autor: Sandor Matamoros
 	Programer: Fatima Arellano
 	Propietario: EPC
 	----------------------------
