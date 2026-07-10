@@ -66,5 +66,42 @@ var PRODUCTO_O_SERVICIO_9=$("#PRODUCTO_O_SERVICIO_9_1_2").val();
 			})
 		}
 /* terminaB1*/		
-		
+	function limpiarFiltroProductosServicios(){
+
+	var campos = [
+
+		"#NOMBRE_EVENTO",
+
+		"#nommbrerazon_2",
+
+		"#P_NOMBRE_FISCAL_RS_EMPRESA_2",
+
+		"#P_RFC_MTDP_2",
+
+		"#usuario_2",
+
+		"#contrasenia_2",
+
+		"#email_2",
+
+		"#validaLISTADO_2",
+
+		"#P_TELEFONO_1_EMPRESA_2",
+
+		"#CIUDAD_SERVICIO_2",
+
+		"#PAIS_SERVICIO_2",
+
+		"#PCONTACTADO_POR_2",
+
+		"#PRODUCTO_O_SERVICIO_9_1_2"
+
+	];
+
+	$(campos.join(',')).val('');
+
+	load2(1);
+
+}
+	
 	</script>
