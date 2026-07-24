@@ -257,7 +257,7 @@ PROGRAMER
 
 
 
-		$candidato = $usuarioBase.'_DUP'.$idOrigen;
+		$candidato = $usuarioBase.$idOrigen;
 
 		$contador = 2;
 
@@ -265,7 +265,7 @@ PROGRAMER
 
 		while($this->existe_usuario_en_otro_proveedor($candidato, 0)){
 
-			$candidato = $usuarioBase.'_DUP'.$idOrigen.'_'.$contador;
+			$candidato = $usuarioBase.$idOrigen.'_'.$contador;
 
 			$contador++;
 
@@ -359,7 +359,12 @@ PROGRAMER
 			return "NO";
 		}
 	}
- 
+ private function mensaje_error_lp($mensaje){
+
+		return "<strong><p style='color:red; font-size:20px; text-transform:uppercase;'>".$mensaje."</p></strong>";
+
+	}
+
 	/* ─────────────────────────────────────────
 	   GUARDAR USUARIO (NUEVO / ACTUALIZAR)
 	   ───────────────────────────────────────── */
@@ -440,7 +445,11 @@ PROGRAMER
 			$smtp = $conexion->array_smtp_ID($conn,$id_empresa);
 			$idlogo = $smtp['idRelacion'];
 			$logo = $conexion->variables_informacionfiscal_logo2_ID($conn,$idlogo);
-			$embebida = array('../includes/archivos/'.$logo => 'ver', '../manuales/munecos.jpg' => 'munecos');
+			$embebida = array(
+				'../includes/archivos/'.$logo => 'ver',
+				'../manuales/munecos.jpg' => 'munecos',
+				'../manuales/qr_proveedores_whatsapp.jpg' => 'qrproveedores'
+			);
 			$html = $this->html($link_generado,'Usuario: AdminPR_'.$usuario.' Password: '.$contrasenia);
 			$conexion->email($EMAILnombre, $html, $adjuntos, $embebida, $Subject,$smtp);
 		}
@@ -633,7 +642,8 @@ PROGRAMER
 		
 			if($this->existe_usuario_en_otro_proveedor($usuario, $IDSql)){
 
-			return "ERROR: EL USUARIO CRM YA EXISTE EN OTRO PROVEEDOR. CAPTURA UN USUARIO DIFERENTE PARA EVITAR CONFUSIÓN AL INGRESAR.";
+			return $this->mensaje_error_lp("ERROR: EL USUARIO CRM YA EXISTE EN OTRO PROVEEDOR. CAPTURA UN USUARIO DIFERENTE PARA EVITAR CONFUSIÓN AL INGRESAR.");
+
 
 		}
 
@@ -642,7 +652,8 @@ PROGRAMER
 
 
 
-			return "ERROR: EL NOMBRE COMERCIAL DEL PROVEEDOR YA EXISTE EN OTRO PROVEEDOR. CAPTURA UN NOMBRE COMERCIAL DIFERENTE PARA EVITAR DUPLICADOS.";
+	return $this->mensaje_error_lp("ERROR: EL NOMBRE COMERCIAL DEL PROVEEDOR YA EXISTE EN OTRO PROVEEDOR. CAPTURA UN NOMBRE COMERCIAL DIFERENTE PARA EVITAR DUPLICADOS.");
+
 
 
 
@@ -748,7 +759,11 @@ PROGRAMER
 			$smtp = $conexion->array_smtp_ID($conn,$rowuem['idRelacionC']);
 			$idlogo = $smtp['idRelacion'];
 			$logo = $conexion->variables_informacionfiscal_logo2_ID($conn,$idlogo);
-			$embebida = array('../includes/archivos/'.$logo => 'ver','../manuales/munecos.jpg' => 'munecos');
+			$embebida = array(
+				'../includes/archivos/'.$logo => 'ver',
+				'../manuales/munecos.jpg' => 'munecos',
+				'../manuales/qr_proveedores_whatsapp.jpg' => 'qrproveedores'
+			);
 			$adjuntos = array();
 			$html = $this->html($link_generado,'Usuario: AdminPR_'.$usuario.' Password: '.$contrasenia);
 			$conexion->email($EMAILnombre, $html, $adjuntos, $embebida, $Subject, $smtp);
@@ -817,7 +832,7 @@ PROGRAMER
 
 
 
-	echo "ERROR: NO PUEDES DUPLICAR CON EL MISMO NOMBRE COMERCIAL. CAPTURA UN NOMBRE COMERCIAL DIFERENTE.";
+	echo $this->mensaje_error_lp("ERROR: NO PUEDES DUPLICAR CON EL MISMO NOMBRE COMERCIAL. CAPTURA UN NOMBRE COMERCIAL DIFERENTE.");
 
 
 
