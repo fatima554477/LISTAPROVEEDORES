@@ -448,7 +448,7 @@ PROGRAMER
 			$embebida = array(
 				'../includes/archivos/'.$logo => 'ver',
 				'../manuales/munecos.jpg' => 'munecos',
-				'../manuales/qr_proveedores_whatsapp.jpg' => 'qrproveedores'
+				__ROOT3__.'/listaproveedores/manuales/qr_proveedores_whatsap.jpg' => 'qrproveedores'
 			);
 			$html = $this->html($link_generado,'Usuario: AdminPR_'.$usuario.' Password: '.$contrasenia);
 			$conexion->email($EMAILnombre, $html, $adjuntos, $embebida, $Subject,$smtp);
@@ -762,7 +762,7 @@ PROGRAMER
 			$embebida = array(
 				'../includes/archivos/'.$logo => 'ver',
 				'../manuales/munecos.jpg' => 'munecos',
-				'../manuales/qr_proveedores_whatsapp.jpg' => 'qrproveedores'
+				__ROOT3__.'/listaproveedores/manuales/qr_proveedores_whatsap.jpg' => 'qrproveedores'
 			);
 			$adjuntos = array();
 			$html = $this->html($link_generado,'Usuario: AdminPR_'.$usuario.' Password: '.$contrasenia);
