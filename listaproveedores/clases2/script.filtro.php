@@ -6,6 +6,19 @@
 
 		$(function() {
 			load2(1);
+					$(document).on('keydown', '#PRODUCTO_O_SERVICIO_9_1_2', function(event) {
+
+				if (event.key === 'Enter' || event.which === 13) {
+
+					event.preventDefault();
+
+					load2(1);
+
+				}
+
+			});
+
+
 		});
 		function load2(page){
 			var query=$("#NOMBRE_EVENTO").val();
