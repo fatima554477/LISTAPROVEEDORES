@@ -147,8 +147,17 @@ define("__ROOT1__", dirname(dirname(__FILE__)));
 		if($sWhere2 != ""){
 			$sWhere22 = substr($sWhere2, 0, -3);
 			$sWhere3  = ' WHERE ( '.$sWhere22.' ) ';
-		} else {
+	} else {
 			$sWhere3 = '';
+		}
+
+		$evaluacionesPermitidas = array('NO_EVALUADO', 'DE_CASA', 'SEGUNDA_OPCION', 'TERCERA_OPCION', 'VETADO');
+		$filtroEvaluacion = isset($search['filtro_evaluacion']) ? $search['filtro_evaluacion'] : '';
+		if (in_array($filtroEvaluacion, $evaluacionesPermitidas, true)) {
+			$condicionEvaluacion = ($filtroEvaluacion === 'NO_EVALUADO')
+				? "(02usuarios.EVALUACION IS NULL OR TRIM(02usuarios.EVALUACION) = '')"
+				: "02usuarios.EVALUACION = '".$this->mysqli->real_escape_string($filtroEvaluacion)."'";
+			$sWhere3 .= ($sWhere3 === '' ? ' WHERE ' : ' AND ').$condicionEvaluacion;
 		}
 
 		// ── FIX: un solo registro por proveedor en ambas tablas relacionadas ──

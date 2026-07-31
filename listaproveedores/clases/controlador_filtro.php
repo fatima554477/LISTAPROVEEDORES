@@ -53,19 +53,36 @@ if ($action == "ajax") {
     $tables = "02usuarios,02direccionproveedor1,02productosservicios,02otrosproveedores,02metodopago";
     
 
-    $nommbrerazon = isset($_POST["nommbrerazon"]) ? $_POST["nommbrerazon"] : ""; 
-    $P_NOMBRE_FISCAL_RS_EMPRESA = isset($_POST["P_NOMBRE_FISCAL_RS_EMPRESA"]) ? $_POST["P_NOMBRE_FISCAL_RS_EMPRESA"] : ""; 
-    $P_RFC_MTDP = isset($_POST["P_RFC_MTDP"]) ? $_POST["P_RFC_MTDP"] : ""; 
-    $usuario = isset($_POST["usuario"]) ? $_POST["usuario"] : ""; 
-    $contrasenia = isset($_POST["contrasenia"]) ? $_POST["contrasenia"] : ""; 
-    $email = isset($_POST["email"]) ? $_POST["email"] : ""; 
-    $validaLISTADO = isset($_POST["validaLISTADO"]) ? $_POST["validaLISTADO"] : ""; 
-    $P_TELEFONO_1_EMPRESA = isset($_POST["P_TELEFONO_1_EMPRESA"]) ? $_POST["P_TELEFONO_1_EMPRESA"] : ""; 
-    $CIUDAD_SERVICIO = isset($_POST["CIUDAD_SERVICIO"]) ? $_POST["CIUDAD_SERVICIO"] : ""; 
-    $PAIS_SERVICIO = isset($_POST["PAIS_SERVICIO"]) ? $_POST["PAIS_SERVICIO"] : ""; 
-    $PCONTACTADO_POR = isset($_POST["PCONTACTADO_POR"]) ? $_POST["PCONTACTADO_POR"] : ""; 
-    $PRODUCTO_O_SERVICIO_9 = isset($_POST["PRODUCTO_O_SERVICIO_9"]) ? $_POST["PRODUCTO_O_SERVICIO_9"] : ""; 
-    $CONVENIO_PROVEEDOR = isset($_POST["CONVENIO_PROVEEDOR"]) ? $_POST["CONVENIO_PROVEEDOR"] : ""; 
+    $nommbrerazon = isset($_POST["nommbrerazon"]) ? $_POST["nommbrerazon"] : "";
+
+    $P_NOMBRE_FISCAL_RS_EMPRESA = isset($_POST["P_NOMBRE_FISCAL_RS_EMPRESA"]) ? $_POST["P_NOMBRE_FISCAL_RS_EMPRESA"] : "";
+
+    $P_RFC_MTDP = isset($_POST["P_RFC_MTDP"]) ? $_POST["P_RFC_MTDP"] : "";
+
+    $usuario = isset($_POST["usuario"]) ? $_POST["usuario"] : "";
+
+    $contrasenia = isset($_POST["contrasenia"]) ? $_POST["contrasenia"] : "";
+
+    $email = isset($_POST["email"]) ? $_POST["email"] : "";
+
+    $validaLISTADO = isset($_POST["validaLISTADO"]) ? $_POST["validaLISTADO"] : "";
+
+    $P_TELEFONO_1_EMPRESA = isset($_POST["P_TELEFONO_1_EMPRESA"]) ? $_POST["P_TELEFONO_1_EMPRESA"] : "";
+
+    $CIUDAD_SERVICIO = isset($_POST["CIUDAD_SERVICIO"]) ? $_POST["CIUDAD_SERVICIO"] : "";
+
+    $PAIS_SERVICIO = isset($_POST["PAIS_SERVICIO"]) ? $_POST["PAIS_SERVICIO"] : "";
+
+    $PCONTACTADO_POR = isset($_POST["PCONTACTADO_POR"]) ? $_POST["PCONTACTADO_POR"] : "";
+
+    $PRODUCTO_O_SERVICIO_9 = isset($_POST["PRODUCTO_O_SERVICIO_9"]) ? $_POST["PRODUCTO_O_SERVICIO_9"] : "";
+
+    $CONVENIO_PROVEEDOR = isset($_POST["CONVENIO_PROVEEDOR"]) ? $_POST["CONVENIO_PROVEEDOR"] : "";
+
+    $filtro_evaluacion = isset($_POST["filtro_evaluacion"]) ? $_POST["filtro_evaluacion"] : "";
+
+
+
 
 
     $per_page = intval($_POST["per_page"]);
@@ -87,6 +104,8 @@ if ($action == "ajax") {
         "PCONTACTADO_POR" => $PCONTACTADO_POR,
         "PRODUCTO_O_SERVICIO_9" => $PRODUCTO_O_SERVICIO_9,
         "CONVENIO_PROVEEDOR" => $CONVENIO_PROVEEDOR,
+		  "filtro_evaluacion" => $filtro_evaluacion,
+
         "per_page" => $per_page,
         "query" => $query,
         "offset" => $offset
@@ -134,6 +153,18 @@ if ($action == "ajax") {
         background: #e2f2f2;
         z-index: 9;
     }
+	    .bandera-evaluacion { display:inline-flex; align-items:center; justify-content:center; gap:5px; min-width:120px; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px; text-align:center; white-space:nowrap; }
+
+    .bandera-no-evaluado { background:#fff; color:#000; border:1px solid #999; }
+
+    .bandera-de-casa { background:#28a745; color:#fff; }
+
+    .bandera-segunda-opcion { background:#ffc107; color:#000; }
+
+    .bandera-tercera-opcion { background:#ffb6c1; color:#000; }
+
+    .bandera-vetado { background:#dc3545; color:#fff; }
+
 </style>
 <div style="max-height: 600px; overflow-y: auto;">
 <table class="table table-striped table-bordered" >	
@@ -142,6 +173,8 @@ if ($action == "ajax") {
             <th style="background:#c9e8e8"></th>
             <th style="background:#c9e8e8">#</th>
             <th style="background:#c9e8e8"></th>
+			    <th style="background:#c9e8e8;text-align:center">EVALUACIÓN</th>
+
 
          <?php 
          if($database->plantilla_filtro($nombreTabla,"nommbrerazon",$altaeventos,$DEPARTAMENTO)=="si"){ ?><th style="background:#c9e8e8;text-align:center">NOMBRE COMERCIAL DE LA EMPRESA</th>
@@ -181,6 +214,28 @@ if ($action == "ajax") {
             <td style="background:#c9e8e8"></td>
             <td style="background:#c9e8e8"></td>
             <td style="background:#c9e8e8"></td>
+			        <td style="background:#c9e8e8;text-align:center">
+
+                <label for="filtro_evaluacion" style="display:block;font-size:11px;font-weight:bold">FILTRAR POR EVALUACIÓN</label>
+
+                <select id="filtro_evaluacion" class="form-select" onchange="load(1);" title="FILTRAR POR EVALUACIÓN">
+
+                    <option value="">TODOS</option>
+
+                    <option value="NO_EVALUADO" style="background:#fff;color:#000" <?php echo $filtro_evaluacion === 'NO_EVALUADO' ? 'selected' : ''; ?>>⚑ BLANCO - NO EVALUADO</option>
+
+                    <option value="DE_CASA" style="background:#28a745;color:#fff" <?php echo $filtro_evaluacion === 'DE_CASA' ? 'selected' : ''; ?>>⚑ VERDE - DE CASA</option>
+
+                    <option value="SEGUNDA_OPCION" style="background:#ffc107;color:#000" <?php echo $filtro_evaluacion === 'SEGUNDA_OPCION' ? 'selected' : ''; ?>>⚑ AMARILLO - SEGUNDA OPCIÓN</option>
+
+                    <option value="TERCERA_OPCION" style="background:#ffb6c1;color:#000" <?php echo $filtro_evaluacion === 'TERCERA_OPCION' ? 'selected' : ''; ?>>⚑ ROSA - TERCERA OPCIÓN</option>
+
+                    <option value="VETADO" style="background:#dc3545;color:#fff" <?php echo $filtro_evaluacion === 'VETADO' ? 'selected' : ''; ?>>⚑ ROJO - VETADO</option>
+
+                </select>
+
+            </td>
+
             <?php /*inicia copiar y pegar iniciaA4*/ ?>
             <!--<hr/><H1>HTML FILTRO E INPUT .PHP A4</H1><BR/>-->
             <?php  
@@ -242,7 +297,7 @@ echo $convenio; ?>">--></td>
     ?>
         <tbody>
             <tr>
-                <td colspan="20" style="text-align:center; padding:30px; color:#888;">
+                <td colspan="21" style="text-align:center; padding:30px; color:#888;">
                     <div style="font-size:16px; margin-bottom:8px;">🔍 Sin resultados</div>
                     <div style="font-size:13px;">No se encontraron proveedores con los filtros aplicados. Intenta con otros términos de búsqueda.</div>
                 </td>
@@ -284,6 +339,42 @@ echo $convenio; ?>">--></td>
         <td>
     <input type="button" name="view_bitacora" value="BITÁCORA" id="<?php echo $row['IDDDDDD']; ?>" class="btn btn-outline-primary btn-xs view_BITACORA_PROV" />
 </td>
+            <?php
+
+                $evaluacion = isset($row['EVALUACION']) ? trim((string)$row['EVALUACION']) : '';
+
+                $presentacionesEvaluacion = array(
+
+                    'DE_CASA' => array('bandera-de-casa', 'DE CASA'),
+
+                    'SEGUNDA_OPCION' => array('bandera-segunda-opcion', 'SEGUNDA OPCIÓN'),
+
+                    'TERCERA_OPCION' => array('bandera-tercera-opcion', 'TERCERA OPCIÓN'),
+
+                    'VETADO' => array('bandera-vetado', 'VETADO')
+
+                );
+
+                $presentacionEvaluacion = isset($presentacionesEvaluacion[$evaluacion])
+
+                    ? $presentacionesEvaluacion[$evaluacion]
+
+                    : array('bandera-no-evaluado', 'NO EVALUADO');
+
+            ?>
+
+            <td style="text-align:center">
+
+                <span class="bandera-evaluacion <?php echo htmlspecialchars($presentacionEvaluacion[0], ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars($presentacionEvaluacion[1], ENT_QUOTES, 'UTF-8'); ?>">
+
+                    <i class="fa fa-flag" aria-hidden="true"></i>
+
+                    <span><?php echo htmlspecialchars($presentacionEvaluacion[1], ENT_QUOTES, 'UTF-8'); ?></span>
+
+                </span>
+
+            </td>
+
         
             <?php if($database->plantilla_filtro($nombreTabla,"nommbrerazon",$altaeventos,$DEPARTAMENTO)=="si"){ ?> <td style="text-align:center;">
         <a href="PROVEEDORES.php?idPROV=<?php echo $row["IDDDDDD"]; ?>" target="_blank">

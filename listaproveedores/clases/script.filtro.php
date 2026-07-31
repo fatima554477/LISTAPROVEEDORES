@@ -22,6 +22,7 @@ var PAIS_SERVICIO=$("#PAIS_SERVICIO").val();
 var PCONTACTADO_POR=$("#PCONTACTADO_POR").val();
 var PRODUCTO_O_SERVICIO_9=$("#PRODUCTO_O_SERVICIO_9_1").val();
 var CONVENIO_PROVEEDOR=$("#CONVENIO_PROVEEDOR_1").val();
+var filtro_evaluacion=$("#filtro_evaluacion").val();
 
 
 /*termina copiar y pegar*/
@@ -46,6 +47,7 @@ var CONVENIO_PROVEEDOR=$("#CONVENIO_PROVEEDOR_1").val();
 'PCONTACTADO_POR':PCONTACTADO_POR,
 'PRODUCTO_O_SERVICIO_9':PRODUCTO_O_SERVICIO_9,
 'CONVENIO_PROVEEDOR':CONVENIO_PROVEEDOR,
+'filtro_evaluacion':filtro_evaluacion,
 
 
 /*termina copiar y pegar*/
@@ -68,43 +70,26 @@ var CONVENIO_PROVEEDOR=$("#CONVENIO_PROVEEDOR_1").val();
 		}
 /* terminaB1*/		
 function limpiarFiltroProveedores(){
+    var campos = [
+        "#NOMBRE_EVENTO",
+        "#nommbrerazon_1",
+        "#P_NOMBRE_FISCAL_RS_EMPRESA_1",
+        "#P_RFC_MTDP_1",
+        "#usuario_1",
+        "#contrasenia_1",
+        "#email_1",
+        "#validaLISTADO_1",
+        "#P_TELEFONO_1_EMPRESA",
+        "#CIUDAD_SERVICIO",
+        "#PAIS_SERVICIO",
+        "#PCONTACTADO_POR",
+        "#PRODUCTO_O_SERVICIO_9_1",
+        "#CONVENIO_PROVEEDOR_1",
+        "#filtro_evaluacion"
+    ];
 
-	var campos = [
-
-		"#NOMBRE_EVENTO",
-
-		"#nommbrerazon_1",
-
-		"#P_NOMBRE_FISCAL_RS_EMPRESA_1",
-
-		"#P_RFC_MTDP_1",
-
-		"#usuario_1",
-
-		"#contrasenia_1",
-
-		"#email_1",
-
-		"#validaLISTADO_1",
-
-		"#P_TELEFONO_1_EMPRESA",
-
-		"#CIUDAD_SERVICIO",
-
-		"#PAIS_SERVICIO",
-
-		"#PCONTACTADO_POR",
-
-		"#PRODUCTO_O_SERVICIO_9_1",
-
-		"#CONVENIO_PROVEEDOR_1"
-
-	];
-
-	$(campos.join(',')).val('');
-
-	load(1);
-
+    $(campos.join(',')).val('');
+    load(1);
 }
 
 function _bitacoraBadgeCfg(tipo) {
