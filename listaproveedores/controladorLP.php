@@ -62,8 +62,16 @@ $P_NOMBRE_FISCAL_RS_EMPRESA = isset($_POST["P_NOMBRE_FISCAL_RS_EMPRESA"])?$_POST
 $nommbrerazon = isset($_POST["nommbrerazon"])?$_POST["nommbrerazon"]:"";
 $P_RFC_MTDP = isset($_POST["P_RFC_MTDP"])?$_POST["P_RFC_MTDP"]:"";
 $usuario= isset($_POST["usuario"])?$_POST["usuario"]:"";
+$EVALUACION = isset($_POST["EVALUACION"])?trim($_POST["EVALUACION"]):"";
+$evaluacionesPermitidas = array('', 'DE_CASA', 'SEGUNDA_OPCION', 'TERCERA_OPCION', 'VETADO');
 
-echo $proveedoresC->ACTUALIZA_LP($IPLP,$email,$contrasenia,$mandacorreo,$nommbrerazon,$P_NOMBRE_FISCAL_RS_EMPRESA,$P_RFC_MTDP ,$usuario);
+if (!in_array($EVALUACION, $evaluacionesPermitidas, true)) {
+	http_response_code(400);
+	echo "EVALUACIÓN NO VÁLIDA";
+	exit;
+}
+
+echo $proveedoresC->ACTUALIZA_LP($IPLP,$email,$contrasenia,$mandacorreo,$nommbrerazon,$P_NOMBRE_FISCAL_RS_EMPRESA,$P_RFC_MTDP ,$usuario,$EVALUACION);
 
 }
 

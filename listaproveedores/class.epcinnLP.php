@@ -617,8 +617,12 @@ PROGRAMER
 	/* ─────────────────────────────────────────
 	   ACTUALIZAR PROVEEDOR
 	   ───────────────────────────────────────── */
-	PUBLIC FUNCTION ACTUALIZA_LP($ID,$email,$contrasenia,$mandacorreo,$nommbrerazon,$P_NOMBRE_FISCAL_RS_EMPRESA,$P_RFC_MTDP,$usuario){
+        PUBLIC FUNCTION ACTUALIZA_LP($ID,$email,$contrasenia,$mandacorreo,$nommbrerazon,$P_NOMBRE_FISCAL_RS_EMPRESA,$P_RFC_MTDP,$usuario,$EVALUACION = ''){
 		$conn = $this->db();
+		$evaluacionesPermitidas = array('', 'DE_CASA', 'SEGUNDA_OPCION', 'TERCERA_OPCION', 'VETADO');
+		if (!in_array($EVALUACION, $evaluacionesPermitidas, true)) {
+			return $this->mensaje_error_lp('ERROR: EVALUACIÓN NO VÁLIDA.');
+		}
  
 		$empresaquery = mysqli_query($conn, 'SELECT * FROM `02empresarelacion` where `02empresarelacion`.`idRelacionP` = "'.$ID.'" ') or die('P156'.mysqli_error($conn));
 		$rowuem = mysqli_fetch_array($empresaquery);
@@ -663,7 +667,7 @@ PROGRAMER
 		// ── Datos anteriores para detectar cambios ────────────────────────────
 		$rowAnterior = mysqli_fetch_array(
 			
-			mysqli_query($conn, "SELECT nommbrerazon, email, usuario FROM 02usuarios WHERE id = '".$IDSql."' "),
+			mysqli_query($conn, "SELECT nommbrerazon, email, usuario, EVALUACION FROM 02usuarios WHERE id = '".$IDSql."' "),
 
 			MYSQLI_ASSOC
 		);
@@ -683,7 +687,21 @@ PROGRAMER
 
 		usuario = '".$usuarioSql."'
 
-		where id = '".$IDSql."' ; ") or die('P156'.mysqli_error($conn));
+			where id = '".$IDSql."' ; ") or die('P156'.mysqli_error($conn));
+
+		// La evaluación usa el campo existente y una consulta preparada.
+		$stmtEvaluacion = mysqli_prepare($conn, "UPDATE 02usuarios SET EVALUACION = ? WHERE id = ?");
+		if (!$stmtEvaluacion) {
+			return $this->mensaje_error_lp('ERROR: NO FUE POSIBLE PREPARAR LA ACTUALIZACIÓN DE EVALUACIÓN.');
+		}
+		$idEvaluacion = (int) $ID;
+		mysqli_stmt_bind_param($stmtEvaluacion, 'si', $EVALUACION, $idEvaluacion);
+		if (!mysqli_stmt_execute($stmtEvaluacion)) {
+			mysqli_stmt_close($stmtEvaluacion);
+			return $this->mensaje_error_lp('ERROR: NO FUE POSIBLE ACTUALIZAR LA EVALUACIÓN.');
+		}
+		mysqli_stmt_close($stmtEvaluacion);
+
 
  
 		// ── UPDATE / INSERT 02direccionproveedor1 ─────────────────────────────
@@ -722,7 +740,8 @@ PROGRAMER
 		if($rowAnterior){
 			if(trim($rowAnterior['usuario'])     !== $usuario)      $cambios[] = 'Usuario CRM: "'.$rowAnterior['usuario'].'" → "'.$usuario.'"';
 			if(trim($rowAnterior['nommbrerazon'])!== $nommbrerazon) $cambios[] = 'Nombre comercial: "'.$rowAnterior['nommbrerazon'].'" → "'.$nommbrerazon.'"';
-			if(trim($rowAnterior['email'])       !== $email)        $cambios[] = 'Email: "'.$rowAnterior['email'].'" → "'.$email.'"';
+					if(trim($rowAnterior['email'])       !== $email)        $cambios[] = 'Email: "'.$rowAnterior['email'].'" → "'.$email.'"';
+			if(trim((string)$rowAnterior['EVALUACION']) !== $EVALUACION) $cambios[] = 'Evaluación: "'.$rowAnterior['EVALUACION'].'" → "'.$EVALUACION.'"';
 		}
 		if($rowDirAnterior){
 			if(trim($rowDirAnterior['P_NOMBRE_FISCAL_RS_EMPRESA']) !== $P_NOMBRE_FISCAL_RS_EMPRESA)

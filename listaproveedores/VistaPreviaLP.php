@@ -29,10 +29,37 @@ color:red;
 }
 </style>
 <div id="respuestaLP_"></div>
- <form  id="listadoLPform"> 
-      <div class="table-responsive">  
+ <form  id="listadoLPform">
+
+      <div class="table-responsive">
            <table class="table table-bordered">';
 	$row = mysqli_fetch_array($queryVISTAPREV);
+	$evaluacionActual = isset($row['EVALUACION']) ? trim((string)$row['EVALUACION']) : '';
+
+	$opcionesEvaluacion = array(
+
+		'' => 'NO EVALUADO',
+
+		'DE_CASA' => 'DE CASA',
+
+		'SEGUNDA_OPCION' => 'SEGUNDA OPCIÓN',
+
+		'TERCERA_OPCION' => 'TERCERA OPCIÓN',
+
+		'VETADO' => 'VETADO'
+
+	);
+
+	$opcionesEvaluacionHtml = '';
+
+	foreach ($opcionesEvaluacion as $valorEvaluacion => $textoEvaluacion) {
+
+		$selectedEvaluacion = ($evaluacionActual === $valorEvaluacion) ? ' selected' : '';
+
+		$opcionesEvaluacionHtml .= '<option value="'.htmlspecialchars($valorEvaluacion, ENT_QUOTES, 'UTF-8').'"'.$selectedEvaluacion.'>'.htmlspecialchars($textoEvaluacion, ENT_QUOTES, 'UTF-8').'</option>';
+
+	}
+
 
 
      $output .= '
@@ -65,7 +92,18 @@ color:red;
 <tr>
 <td width="50%"><label>EMAIL:</label></td>
 <td width="50%"><input type="text" name="email" value="'.$row["email"].'"  style="width:100%"></td>
-</tr>  
+</tr> 
+
+
+
+<tr>
+
+<td width="50%"><label>EVALUACIÓN DEL PROVEEDOR:</label></td>
+
+<td width="50%"><select name="EVALUACION" id="EVALUACION" class="form-control evaluacion-select">'.$opcionesEvaluacionHtml.'</select></td>
+
+</tr>
+ 
 
 	 <tr>  
             <td width="50%"><label>SOLO GUARDAR</label></td>  
@@ -99,6 +137,32 @@ color:red;
 
 <script>
 	$(document).ready(function(){
+			function aplicarColorEvaluacion() {
+
+			var estilos = {
+
+				'': ['#ffffff', '#000000'],
+
+				'DE_CASA': ['#28a745', '#ffffff'],
+
+				'SEGUNDA_OPCION': ['#ffc107', '#000000'],
+
+				'TERCERA_OPCION': ['#ffb6c1', '#000000'],
+
+				'VETADO': ['#dc3545', '#ffffff']
+
+			};
+
+			var estilo = estilos[$('#EVALUACION').val()] || estilos[''];
+
+			$('#EVALUACION').css({ backgroundColor: estilo[0], color: estilo[1] });
+
+		}
+
+		$('#EVALUACION').on('change', aplicarColorEvaluacion);
+
+		aplicarColorEvaluacion();
+
 
 
 $("#clickLP").click(function(){
@@ -118,10 +182,15 @@ $("#clickLP").click(function(){
 		success:function(data){
 			if($.trim(data)=='Ingresado' || $.trim(data)=='ACTUALIZADO'){
 					$('#dataModal').modal('hide');
-					$.getScript(load(1));
+					load(1);
+
 					//$("#resetSB").load(location.href + " #resetSB");
 					$("#respuestaLP_").html("<span id='ACTUALIZADO' >"+data+"</span>");
 			}else if($.trim(data)=='ACTUALIZADO Y CORREO ENVIADO'){
+					$('#dataModal').modal('hide');
+
+					load(1);
+
 					$("#respuestaLP_").html("<span id='ACTUALIZADO' >"+data+"</span>");
 			}else{
 					$("#respuestaLP_").html(data);
