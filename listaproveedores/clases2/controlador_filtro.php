@@ -41,7 +41,8 @@ $P_TELEFONO_1_EMPRESA = isset($_POST["P_TELEFONO_1_EMPRESA"])?$_POST["P_TELEFONO
 $CIUDAD_SERVICIO = isset($_POST["CIUDAD_SERVICIO"])?$_POST["CIUDAD_SERVICIO"]:""; 
 $PAIS_SERVICIO = isset($_POST["PAIS_SERVICIO"])?$_POST["PAIS_SERVICIO"]:""; 
 $PCONTACTADO_POR = isset($_POST["PCONTACTADO_POR"])?$_POST["PCONTACTADO_POR"]:""; 
-$PRODUCTO_O_SERVICIO_9 = isset($_POST["PRODUCTO_O_SERVICIO_9"])?$_POST["PRODUCTO_O_SERVICIO_9"]:""; 
+$PRODUCTO_O_SERVICIO_9 = isset($_POST["PRODUCTO_O_SERVICIO_9"])?$_POST["PRODUCTO_O_SERVICIO_9"]:"";
+$filtro_evaluacion = isset($_POST["filtro_evaluacion"])?$_POST["filtro_evaluacion"]:"";
 
 
 $per_page=intval($_POST["per_page"]);
@@ -63,7 +64,7 @@ $per_page=intval($_POST["per_page"]);
 "PAIS_SERVICIO"=>$PAIS_SERVICIO,
 "PCONTACTADO_POR"=>$PCONTACTADO_POR,
 "PRODUCTO_O_SERVICIO_9"=>$PRODUCTO_O_SERVICIO_9,
-
+"filtro_evaluacion"=>$filtro_evaluacion,
 
  "per_page"=>$per_page,
 	"query"=>$query,
@@ -94,7 +95,7 @@ $per_page=intval($_POST["per_page"]);
 			?>
         </div>
 	<div class="table-responsive">
-	<style>
+<style>
     thead tr:first-child th {
         position: sticky;
         top: 0;
@@ -108,13 +109,22 @@ $per_page=intval($_POST["per_page"]);
         background: #e2f2f2;
         z-index: 9;
     }
+
+    .bandera-evaluacion { display:inline-flex; align-items:center; justify-content:center; gap:5px; min-width:120px; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px; text-align:center; white-space:nowrap; }
+	.bandera-sin-evaluar { background:#fff; color:#555; border:1px solid #bbb; }
+	.bandera-de-casa { background:#28a745; color:#fff; border:1px solid #1e7e34; }
+	.bandera-segunda { background:#ffc107; color:#000; border:1px solid #d39e00; }
+	.bandera-tercera { background:#ffb6c1; color:#000; border:1px solid #e98fa0; }
+	.bandera-vetado { background:#dc3545; color:#fff; border:1px solid #bd2130; }
 </style>
+
 <div style="max-height: 600px; overflow-y: auto;">
 	 <table class="table table-striped table-bordered" >	
 		<thead>
             <tr>
 <th style="background:#c9e8e8"></th>
 <th style="background:#c9e8e8">#</th>
+<th style="background:#c9e8e8;text-align:center">EVALUACIÓN</th>
 <?php /*inicia copiar y pegar iniciaA3*/ ?>
 
 <!--<hr/><H1>HTML FILTRO .PHP A3</H1><BR/>--><?php 
@@ -170,6 +180,17 @@ if($database->plantilla_filtro($nombreTabla,"PCONTACTADO_POR",$altaeventos,$DEPA
             <tr>
 <td style="background:#c9e8e8"></td>
 <td style="background:#c9e8e8"></td>
+<td style="background:#c9e8e8;text-align:center;min-width:220px">
+<label for="filtro_evaluacion_2" style="display:block;font-size:11px;font-weight:bold">FILTRAR POR EVALUACIÓN</label>
+<select id="filtro_evaluacion_2" class="form-control" onchange="load2(1);" title="FILTRAR POR EVALUACIÓN">
+<option value="">TODAS</option>
+<option value="NO_EVALUADO" style="background:#fff;color:#000" <?php echo $filtro_evaluacion === 'NO_EVALUADO' ? 'selected' : ''; ?>>⚑ BLANCO - NO EVALUADO</option>
+<option value="DE_CASA" style="background:#28a745;color:#fff"<?php echo $filtro_evaluacion === 'DE_CASA' ? 'selected' : ''; ?>>⚑ VERDE - DE CASA</option>
+<option value="SEGUNDA_OPCION" style="background:#ffc107;color:#000"<?php echo $filtro_evaluacion === 'SEGUNDA_OPCION' ? 'selected' : ''; ?>>⚑ AMARILLO - SEGUNDA OPCIÓN</option>
+<option value="TERCERA_OPCION" style="background:#ffb6c1;color:#000"<?php echo $filtro_evaluacion === 'TERCERA_OPCION' ? 'selected' : ''; ?>>⚑ ROSA - TERCERA OPCIÓN</option>
+<option value="VETADO" style="background:#dc3545;color:#fff" <?php echo $filtro_evaluacion === 'VETADO' ? 'selected' : ''; ?>>⚑ ROJO - VETADO</option>
+</select>
+</td>
 <?php /*inicia copiar y pegar iniciaA4*/ ?>
 
 <!--<hr/><H1>HTML FILTRO E INPUT .PHP A4</H1><BR/>-->
@@ -283,7 +304,25 @@ echo $nommbrerazon; ?>">--></td>
                    localStorage.removeItem('checkbox_' + id);
                }">
 </td>
-            <td><?php echo $row["IDDDDDD"];?></td>
+                 <td><?php echo $row["IDDDDDD"];?></td>
+            <?php
+                $evaluacion = isset($row['EVALUACION']) ? trim((string)$row['EVALUACION']) : '';
+                $presentacionesEvaluacion = array(
+                    'DE_CASA' => array('bandera-de-casa', 'DE CASA'),
+                    'SEGUNDA_OPCION' => array('bandera-segunda', 'SEGUNDA OPCIÓN'),
+                    'TERCERA_OPCION' => array('bandera-tercera', 'TERCERA OPCIÓN'),
+                    'VETADO' => array('bandera-vetado', 'VETADO')
+                );
+                $presentacionEvaluacion = isset($presentacionesEvaluacion[$evaluacion])
+                    ? $presentacionesEvaluacion[$evaluacion]
+                    : array('bandera-sin-evaluar', 'NO EVALUADO');
+            ?>
+            <td style="text-align:center;">
+                <span class="bandera-evaluacion <?php echo htmlspecialchars($presentacionEvaluacion[0], ENT_QUOTES, 'UTF-8'); ?>">
+                    <span aria-hidden="true">⚑</span>
+                    <span><?php echo htmlspecialchars($presentacionEvaluacion[1], ENT_QUOTES, 'UTF-8'); ?></span>
+                </span>
+            </td>
             <?php /*inicia copiar y pegar iniciaA5*/ ?>
             <!--<hr/><H1>FOREACH FILTRO .PHP A5</H1><BR/>-->
 

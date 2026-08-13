@@ -187,10 +187,19 @@ $sWhere2.="02otrosproveedores.PRODUCTO_O_SERVICIO_9 LIKE '%".$search['PRODUCTO_O
 IF($sWhere2!=""){
 				$sWhere22 = substr($sWhere2,0,-3);
 			$sWhere3  = ' where ( '.$sWhere22.' ) ';
-		}ELSE{
-		$sWhere3  = '';	
+	}ELSE{
+		$sWhere3  = '';
 		}
-		$tables = '02usuarios 
+
+		$evaluacionesPermitidas = array('NO_EVALUADO', 'DE_CASA', 'SEGUNDA_OPCION', 'TERCERA_OPCION', 'VETADO');
+		$filtroEvaluacion = isset($search['filtro_evaluacion']) ? $search['filtro_evaluacion'] : '';
+		if (in_array($filtroEvaluacion, $evaluacionesPermitidas, true)) {
+			$condicionEvaluacion = ($filtroEvaluacion === 'NO_EVALUADO')
+				? "(02usuarios.EVALUACION IS NULL OR TRIM(02usuarios.EVALUACION) = '')"
+				: "02usuarios.EVALUACION = '".$this->mysqli->real_escape_string($filtroEvaluacion)."'";
+			$sWhere3 .= ($sWhere3 === '' ? ' where ' : ' and ').$condicionEvaluacion;
+		}
+		$tables = '02usuarios
 		/*left join 02direccionproveedor1 ON 02usuarios.id = 02direccionproveedor1.idRelacion 
 		left join  02productosservicios ON 02usuarios.id = 02productosservicios.idRelacion*/ 
 		left join  02otrosproveedores ON 02usuarios.id = 02otrosproveedores.idRelacion';

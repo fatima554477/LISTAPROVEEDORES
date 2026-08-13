@@ -35,6 +35,7 @@ var CIUDAD_SERVICIO=$("#CIUDAD_SERVICIO_2").val();
 var PAIS_SERVICIO=$("#PAIS_SERVICIO_2").val();
 var PCONTACTADO_POR=$("#PCONTACTADO_POR_2").val();
 var PRODUCTO_O_SERVICIO_9=$("#PRODUCTO_O_SERVICIO_9_1_2").val();
+var filtro_evaluacion=$("#filtro_evaluacion_2").val();
 
 
 /*termina copiar y pegar*/
@@ -58,6 +59,7 @@ var PRODUCTO_O_SERVICIO_9=$("#PRODUCTO_O_SERVICIO_9_1_2").val();
 'PAIS_SERVICIO':PAIS_SERVICIO,
 'PCONTACTADO_POR':PCONTACTADO_POR,
 'PRODUCTO_O_SERVICIO_9':PRODUCTO_O_SERVICIO_9,
+'filtro_evaluacion':filtro_evaluacion,
 
 
 /*termina copiar y pegar*/
@@ -107,7 +109,8 @@ var PRODUCTO_O_SERVICIO_9=$("#PRODUCTO_O_SERVICIO_9_1_2").val();
 
 		"#PCONTACTADO_POR_2",
 
-		"#PRODUCTO_O_SERVICIO_9_1_2"
+		"#PRODUCTO_O_SERVICIO_9_1_2",
+		"#filtro_evaluacion_2"
 
 	];
 
