@@ -1017,27 +1017,26 @@ $('#mensajePRESENTACIONP').html("<span id='ACTUALIZADO' >"+data+"</span>").fadeI
 
 /*LISTO enviarDIRECEP*/
 	
-	$(document).on("click", "#enviarDIRECEP", function(){
-
-		var formulario = $(this).closest("form").serializeArray();
-
-			$.ajax({
-			type: "POST",
-			url: "proveedores/controladorP.php",
-			data: formulario,
-		}).done(function(respuesta){
-
-			//$("#mensajeADJUNTOCOL").html(respuesta);
-			if($.trim(respuesta)=='Ingresado' || $.trim(respuesta)=='Actualizado'){
-	
-			$("#mensajeDIRECEP").html(respuesta).fadeIn().delay(2000).fadeOut();
-			$("#mensajeDIRECEP").load(location.href + " #mensajeDIRECEP>*");
-			}else{
-			$("#mensajeDIRECEP").html(respuesta);				
-			}
-
-			});
-	});	
+$(document).on("click", "#enviarDIRECEP", function(){
+    var formulario = $("#PDIRECEMPRE1form").serializeArray();
+    
+    $.ajax({
+        type: "POST",
+        url: "proveedores/controladorP.php",
+        data: formulario,
+    }).done(function(respuesta){
+        if($.trim(respuesta)=='Ingresado' || $.trim(respuesta)=='Actualizado'){
+            // EXITOSO - verde
+            $("#mensajeDIRECEP")
+                .html("<span style='color:#155724; background:#d4edda; border:1px solid #c3e6cb; padding:5px 15px; border-radius:4px; font-weight:bold;'>✔ "+respuesta+"</span>")
+                .fadeIn().delay(2000).fadeOut();
+        }else{
+            // ERROR - rojo
+            $("#mensajeDIRECEP")
+                .html("<span style='color:#721c24; background:#f8d7da; border:1px solid #f5c6cb; padding:5px 15px; border-radius:4px; font-weight:bold;'>✘ "+respuesta+"</span>");
+        }
+    });
+});
 
 
 

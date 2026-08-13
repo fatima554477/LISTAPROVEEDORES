@@ -383,7 +383,16 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 	   DIRECCIÓN PROVEEDOR 1  (ya tenía bitácora; se enriquece)
 	   ═════════════════════════════════════════════════════════════ */
 	public function variable_DIRECCIONP1(){ $conn=$this->db(); return mysqli_fetch_array(mysqli_query($conn,"select * from 02direccionproveedor1 where idRelacion='".$_SESSION['idPROV']."' "),MYSQLI_ASSOC); }
-	public function revisar_DIRECCIONP1(){ $conn=$this->db(); $row=mysqli_fetch_array(mysqli_query($conn,'select id from 02direccionproveedor1 where idRelacion="'.$_SESSION['idPROV'].'" ') or die('P44'.mysqli_error($conn)),MYSQLI_ASSOC); return isset($row['id'])?$row['id']:null; }
+	// DESPUÉS - corregido
+public function revisar_DIRECCIONP1(){ 
+    $conn=$this->db(); 
+    $query = mysqli_query($conn,
+        'select id from 02direccionproveedor1 where idRelacion="'.$_SESSION['idPROV'].'" LIMIT 1'
+    );
+    if(!$query) return 0;
+    $row = mysqli_fetch_array($query, MYSQLI_ASSOC); 
+    return isset($row['id']) ? (int)$row['id'] : 0;  // <-- regresa 0 en lugar de null
+}
 
  
 	public function direccionproveedor1($P_NOMBRE_COMERCIAL_EMPRESA,$P_NOMBRE_FISCAL_RS_EMPRESA,$P_RFC_MTDP,$P_REGIMEN_FISCAL_MTDP,$_P_METODO_DE_PAGO,$P_FORMADE_PAGO,$P_USO_CFDI,$FISICA_MORAL,$P_DIRECCION_FISCAL_EMPRESA,$P_EDIFICIO_EMPRESA,$P_CALLE_EMPRESA,$P_NUMERO_EXTERIOR_EMPRESA,$P_NUMERO_INTERIOR_EMPRESA,$P_NUMERO_OFICINA_EMPRESA,$P_COLONIA_EMPRESA,$P_ALCALDIA_EMPRESA,$P_C_P_EMPRESA,$P_CIUDAD_EMPRESA,$P_ESTADO_EMPRESA,$P_PAIS_EMPRESA,$dircasa11,$P_UBICACION_MAPA_1,$P_TELEFONO_1_EMPRESA,$P_TELEFONO_2_EMPRESA,$P_WHATSAPP_EMPRESA_1,$P_IMAIL_EMPRESA,$P_PAGINA_WEB_EMPRESA,$P_NOMBRE_APP_EMPRESA){
@@ -445,7 +454,7 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 
 			$var2 = "insert into 02direccionproveedor1 (P_NOMBRE_COMERCIAL_EMPRESA,P_NOMBRE_FISCAL_RS_EMPRESA,P_RFC_MTDP,P_REGIMEN_FISCAL_MTDP,_P_METODO_DE_PAGO,P_FORMADE_PAGO,P_USO_CFDI,FISICA_MORAL,P_DIRECCION_FISCAL_EMPRESA,P_EDIFICIO_EMPRESA,P_CALLE_EMPRESA,P_NUMERO_EXTERIOR_EMPRESA,P_NUMERO_INTERIOR_EMPRESA,P_NUMERO_OFICINA_EMPRESA,P_COLONIA_EMPRESA,P_ALCALDIA_EMPRESA,P_C_P_EMPRESA,P_CIUDAD_EMPRESA,P_ESTADO_EMPRESA,P_PAIS_EMPRESA,dircasa11,P_UBICACION_MAPA_1,P_TELEFONO_1_EMPRESA,P_TELEFONO_2_EMPRESA,P_WHATSAPP_EMPRESA_1,P_IMAIL_EMPRESA,P_PAGINA_WEB_EMPRESA,P_NOMBRE_APP_EMPRESA,idRelacion) values('".$datosSql['P_NOMBRE_COMERCIAL_EMPRESA']."','".$datosSql['P_NOMBRE_FISCAL_RS_EMPRESA']."','".$datosSql['P_RFC_MTDP']."','".$datosSql['P_REGIMEN_FISCAL_MTDP']."','".$datosSql['_P_METODO_DE_PAGO']."','".$datosSql['P_FORMADE_PAGO']."','".$datosSql['P_USO_CFDI']."','".$datosSql['FISICA_MORAL']."','".$datosSql['P_DIRECCION_FISCAL_EMPRESA']."','".$datosSql['P_EDIFICIO_EMPRESA']."','".$datosSql['P_CALLE_EMPRESA']."','".$datosSql['P_NUMERO_EXTERIOR_EMPRESA']."','".$datosSql['P_NUMERO_INTERIOR_EMPRESA']."','".$datosSql['P_NUMERO_OFICINA_EMPRESA']."','".$datosSql['P_COLONIA_EMPRESA']."','".$datosSql['P_ALCALDIA_EMPRESA']."','".$datosSql['P_C_P_EMPRESA']."','".$datosSql['P_CIUDAD_EMPRESA']."','".$datosSql['P_ESTADO_EMPRESA']."','".$datosSql['P_PAIS_EMPRESA']."','".$datosSql['dircasa11']."','".$datosSql['P_UBICACION_MAPA_1']."','".$datosSql['P_TELEFONO_1_EMPRESA']."','".$datosSql['P_TELEFONO_2_EMPRESA']."','".$datosSql['P_WHATSAPP_EMPRESA_1']."','".$datosSql['P_IMAIL_EMPRESA']."','".$datosSql['P_PAGINA_WEB_EMPRESA']."','".$datosSql['P_NOMBRE_APP_EMPRESA']."','".$sessionSql."');";
 
-			if($existe>=1){
+			if($existe > 0){
 				$datosAnteriores = $this->variable_DIRECCIONP1();
 				$cambios = $this->construir_detalle_cambios($datosAnteriores,$datosNuevos,$mapaCamposBitacora);
 				mysqli_query($conn,$var1) or die('P156'.mysqli_error($conn));
@@ -878,7 +887,7 @@ PROGRAMER: SANDOR ACTUALIZACION: 1 MAY 2023
 	public function enviarDATOSBANCARIOS1($P_TIPO_DE_MONEDA_1,$P_INSTITUCION_FINANCIERA_1,$P_NUMERO_DE_CUENTA_DB_1,$P_NUMERO_CLABE_1,$P_NUMERO_DE_SUCURSAL_1,$P_NUMERO_IBAN_1,$P_NUMERO_CUENTA_SWIFT_1,$FOTO_ESTADO_PROVEE,$ULTIMA_CARGA_DATOBANCA,$OBSERVACIONES_D,$ENVIARRdatosbancario1p,$IPdatosbancario1p){
 		$conn=$this->db(); $existe=$this->revisar_DATOSBANCARIOS1(); $session=isset($_SESSION['idPROV'])?$_SESSION['idPROV']:0;
 		$variable_check=''; $valor_check='';
-		if($existe==0 || $existe==''){ $variable_check=" checkbox, "; $valor_check=" 'si', "; }
+		if($existe==0 || $existe==''){ $variable_check=" checkbox, "; $valor_check=" 'no', "; }
  
 		if($session!=''){
 				$foto_estado_provee_update = ($FOTO_ESTADO_PROVEE!='') ? "FOTO_ESTADO_PROVEE='".$FOTO_ESTADO_PROVEE."',
