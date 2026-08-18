@@ -116,6 +116,17 @@ $per_page=intval($_POST["per_page"]);
 	.bandera-segunda { background:#ffc107; color:#000; border:1px solid #d39e00; }
 	.bandera-tercera { background:#ffb6c1; color:#000; border:1px solid #e98fa0; }
 	.bandera-vetado { background:#dc3545; color:#fff; border:1px solid #bd2130; }
+		.calificacion-proveedor { display:inline-flex; align-items:center; justify-content:center; min-width:38px; min-height:30px; padding:4px 9px; border-radius:15px; border:1px solid rgba(0,0,0,.18); font-weight:bold; }
+
+	.calificacion-baja { background:#f5a9a9; color:#721c24; }
+
+	.calificacion-media { background:#f6cece; color:#6b4d00; }
+
+	.calificacion-alta { background:#a9f5e1; color:#075c48; }
+
+	.calificacion-excelente { background:#04b486; color:#fff; }
+
+	.calificacion-sin-registro { background:#fff; color:#777; border-color:#aaa; font-size:11px; white-space:nowrap; }
 </style>
 
 <div style="max-height: 600px; overflow-y: auto;">
@@ -124,7 +135,9 @@ $per_page=intval($_POST["per_page"]);
             <tr>
 <th style="background:#c9e8e8"></th>
 <th style="background:#c9e8e8">#</th>
-<th style="background:#c9e8e8;text-align:center">EVALUACIÓN</th>
+<th style="background:#c9e8e8;text-align:center">CLASIFICACIÓN</th>
+<th style="background:#c9e8e8;text-align:center">CALIFICACIÓN</th>
+
 <?php /*inicia copiar y pegar iniciaA3*/ ?>
 
 <!--<hr/><H1>HTML FILTRO .PHP A3</H1><BR/>--><?php 
@@ -181,16 +194,18 @@ if($database->plantilla_filtro($nombreTabla,"PCONTACTADO_POR",$altaeventos,$DEPA
 <td style="background:#c9e8e8"></td>
 <td style="background:#c9e8e8"></td>
 <td style="background:#c9e8e8;text-align:center;min-width:220px">
-<label for="filtro_evaluacion_2" style="display:block;font-size:11px;font-weight:bold">FILTRAR POR EVALUACIÓN</label>
-<select id="filtro_evaluacion_2" class="form-control" onchange="load2(1);" title="FILTRAR POR EVALUACIÓN">
+<label for="filtro_evaluacion_2" style="display:block;font-size:11px;font-weight:bold">FILTRAR POR CLASIFICACIÓN</label>
+<select id="filtro_evaluacion_2" class="form-control" onchange="load2(1);" title="FILTRAR POR CLASIFICACIÓN">
 <option value="">TODAS</option>
-<option value="NO_EVALUADO" style="background:#fff;color:#000" <?php echo $filtro_evaluacion === 'NO_EVALUADO' ? 'selected' : ''; ?>>⚑ BLANCO - NO EVALUADO</option>
+<option value="NO_EVALUADO" style="background:#fff;color:#000" <?php echo $filtro_evaluacion === 'NO_EVALUADO' ? 'selected' : ''; ?>>⚑ BLANCO - NO CLASIFICADO</option>
 <option value="DE_CASA" style="background:#28a745;color:#fff"<?php echo $filtro_evaluacion === 'DE_CASA' ? 'selected' : ''; ?>>⚑ VERDE - DE CASA</option>
 <option value="SEGUNDA_OPCION" style="background:#ffc107;color:#000"<?php echo $filtro_evaluacion === 'SEGUNDA_OPCION' ? 'selected' : ''; ?>>⚑ AMARILLO - SEGUNDA OPCIÓN</option>
 <option value="TERCERA_OPCION" style="background:#ffb6c1;color:#000"<?php echo $filtro_evaluacion === 'TERCERA_OPCION' ? 'selected' : ''; ?>>⚑ ROSA - TERCERA OPCIÓN</option>
 <option value="VETADO" style="background:#dc3545;color:#fff" <?php echo $filtro_evaluacion === 'VETADO' ? 'selected' : ''; ?>>⚑ ROJO - VETADO</option>
 </select>
 </td>
+<td style="background:#c9e8e8"></td>
+
 <?php /*inicia copiar y pegar iniciaA4*/ ?>
 
 <!--<hr/><H1>HTML FILTRO E INPUT .PHP A4</H1><BR/>-->
@@ -315,7 +330,7 @@ echo $nommbrerazon; ?>">--></td>
                 );
                 $presentacionEvaluacion = isset($presentacionesEvaluacion[$evaluacion])
                     ? $presentacionesEvaluacion[$evaluacion]
-                    : array('bandera-sin-evaluar', 'NO EVALUADO');
+                    : array('bandera-sin-evaluar', 'SIN CLASIFICAR');
             ?>
             <td style="text-align:center;">
                 <span class="bandera-evaluacion <?php echo htmlspecialchars($presentacionEvaluacion[0], ENT_QUOTES, 'UTF-8'); ?>">
@@ -323,6 +338,52 @@ echo $nommbrerazon; ?>">--></td>
                     <span><?php echo htmlspecialchars($presentacionEvaluacion[1], ENT_QUOTES, 'UTF-8'); ?></span>
                 </span>
             </td>
+			            <?php
+
+                $calificacion = isset($row['ULTIMA_CALIFICACION']) ? trim((string)$row['ULTIMA_CALIFICACION']) : '';
+
+                $claseCalificacion = 'calificacion-sin-registro';
+
+                $textoCalificacion = 'SIN REGISTRO';
+
+                if ($calificacion !== '' && is_numeric($calificacion)) {
+
+                    $valorCalificacion = (int)$calificacion;
+
+                    $textoCalificacion = (string)$valorCalificacion;
+
+                    if ($valorCalificacion <= 3) {
+
+                        $claseCalificacion = 'calificacion-baja';
+
+                    } elseif ($valorCalificacion <= 5) {
+
+                        $claseCalificacion = 'calificacion-media';
+
+                    } elseif ($valorCalificacion <= 8) {
+
+                        $claseCalificacion = 'calificacion-alta';
+
+                    } else {
+
+                        $claseCalificacion = 'calificacion-excelente';
+
+                    }
+
+                }
+
+            ?>
+
+            <td style="text-align:center">
+
+                <span class="calificacion-proveedor <?php echo $claseCalificacion; ?>" title="Última calificación registrada">
+
+                    <?php echo htmlspecialchars($textoCalificacion, ENT_QUOTES, 'UTF-8'); ?>
+
+                </span>
+
+            </td>
+
             <?php /*inicia copiar y pegar iniciaA5*/ ?>
             <!--<hr/><H1>FOREACH FILTRO .PHP A5</H1><BR/>-->
 

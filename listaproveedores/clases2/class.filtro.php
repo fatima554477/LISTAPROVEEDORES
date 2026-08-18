@@ -202,9 +202,28 @@ IF($sWhere2!=""){
 		$tables = '02usuarios
 		/*left join 02direccionproveedor1 ON 02usuarios.id = 02direccionproveedor1.idRelacion 
 		left join  02productosservicios ON 02usuarios.id = 02productosservicios.idRelacion*/ 
-		left join  02otrosproveedores ON 02usuarios.id = 02otrosproveedores.idRelacion';
+			left join  02otrosproveedores ON 02usuarios.id = 02otrosproveedores.idRelacion
+
+		left join (
+
+			select c.idRelacion, c.ADJUNTO_CALIFICACION as ULTIMA_CALIFICACION
+
+			from 02CALIFICACION c
+
+			inner join (
+
+				select idRelacion, max(id) as max_id
+
+				from 02CALIFICACION
+
+				group by idRelacion
+
+			) cx on cx.idRelacion = c.idRelacion and cx.max_id = c.id
+
+		) as calificacion_proveedor on 02usuarios.id = calificacion_proveedor.idRelacion';
+
 		//02usuario.id
-		$sWhere3.="order by nommbrerazon asc";
+		$sWhere3.="order by usuario asc";
 		$sql="SELECT $campos,02usuarios.id as IDDDDDD FROM  $tables $sWhere $sWhere3 LIMIT $offset,$per_page";
 		
 		$query=$this->mysqli->query($sql);
