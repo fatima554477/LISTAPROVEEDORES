@@ -85,13 +85,15 @@ echo $encabezado.$option9.'</select>';
          name="OBSERVACIONES_CALIFICACION">
   <div class="valid-feedback">¡Bien!</div>
 </div>
-                        
 
            <td  style="background:#faebee">
            <strong>
-           <?php echo date('Y-m-d'); ?>
+           QUIEN INGRESA: <?php echo htmlspecialchars($_SESSION["NOMBREUSUARIO"], ENT_QUOTES, 'UTF-8'); ?>
+           &nbsp;&nbsp;|&nbsp;&nbsp;
+           <?php echo date('d/m/Y'); ?>
            </strong>
-           <input type="hidden" style="width:200px;"  class="form-control" id="validationCustom03"   value="<?php echo date('Y-m-d'); ?>" name="FECHA_CALIFICACION">
+           <input type="hidden" id="validationCustom03" value="<?php echo htmlspecialchars($_SESSION["NOMBREUSUARIO"], ENT_QUOTES, 'UTF-8'); ?>" name="QUIENINGRESO">
+           <input type="hidden" style="width:200px;"  class="form-control"    value="<?php echo date('Y-m-d'); ?>" name="FECHA_CALIFICACION">
            
            </td></tr></div>
 
@@ -142,7 +144,38 @@ echo $encabezado.$option9.'</select>';
 
            <?php
 $querycontras = $proveedoresC->Listado_CALIFICACION();
+
+/**
+ * Formatea la fecha de carga como DIA/MES/AÑO y separa la hora en un <span>
+ * con clase propia para pintarla de otro color vía CSS.
+ * Soporta valores guardados como "d-m-Y H:i:s" o "Y-m-d H:i:s".
+ */
+function formatearFechaCargaCalificacion($valor)
+{
+    $valor = trim((string) $valor);
+    if ($valor === '') {
+        return '';
+    }
+
+    $timestamp = strtotime($valor);
+    if ($timestamp === false) {
+        return htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
+    }
+
+    $fechaFormateada = date('d/m/Y', $timestamp);
+    $horaFormateada = date('H:i:s', $timestamp);
+
+    return $fechaFormateada
+        . ' <span class="hora-carga-calificacion">' . htmlspecialchars($horaFormateada, ENT_QUOTES, 'UTF-8') . '</span>';
+}
 ?>
+<style>
+    .hora-carga-calificacion {
+        color: #a83279;
+        font-weight: 600;
+        font-size: 0.9em;
+    }
+</style>
 
 <br />
 <div class='table-responsive'>
@@ -153,10 +186,11 @@ $querycontras = $proveedoresC->Listado_CALIFICACION();
 <tbody= 'font-style:italic;'>
 <table class="table table-striped table-bordered" style="width:100%" id='reset_CALIFICACION' name='reset_CALIFICACION'>
 <tr style='background:#f5f9fc;text-align:center'>
-<th width="10%"style="background:#c9e8e8">ENVIAR POR EMAIL</th>  
+<th width="10%"style="background:#c9e8e8">ENVIAR<br> POR EMAIL</th>  
 <th width="20%"style="background:#c9e8e8">MOTIVO</th>
 <th width="20%"style="background:#c9e8e8">CALIFICACIÓN</th>
 <th width="20%"style="background:#c9e8e8">OBSERVACIONES</th>
+<th width="20%"style="background:#c9e8e8">INGRESO ESTA CALIFICACIÓN</th>
 <th width="20%"style="background:#c9e8e8">FECHA DE CARGA</th>
 
 </tr>
@@ -183,7 +217,8 @@ while($row = mysqli_fetch_array($querycontras))
 ">
     <?php echo $row["OBSERVACIONES_CALIFICACION"]; ?>
 </td>
-<td ><?php echo $row["FECHA_CALIFICACION"]; ?></td>
+<td ><?php echo $row["QUIENINGRESO"]; ?></td>
+<td ><?php echo formatearFechaCargaCalificacion($row["FECHA_CALIFICACION"]); ?></td>
 <?php if($conexion->variablespermisos('','CALIFICACION','modificar')=='si'){ ?>
 <td>
 <input type="button" name="view" value="MODIFICAR" id="<?php echo $row["id"]; ?>" class="btn btn-info btn-xs view_CALIFICACION" />
