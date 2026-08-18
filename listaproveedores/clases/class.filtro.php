@@ -182,10 +182,30 @@ define("__ROOT1__", dirname(dirname(__FILE__)));
 					GROUP BY idRelacion
 				) px ON px.idRelacion = p.idRelacion AND px.min_id = p.id
 			) AS 02productosservicios ON 02usuarios.id = 02productosservicios.idRelacion
+					LEFT JOIN (
+
+				SELECT c.idRelacion, c.ADJUNTO_CALIFICACION AS ULTIMA_CALIFICACION
+
+				FROM 02CALIFICACION c
+
+				INNER JOIN (
+
+					SELECT idRelacion, MAX(id) AS max_id
+
+					FROM 02CALIFICACION
+
+					GROUP BY idRelacion
+
+				) cx ON cx.idRelacion = c.idRelacion AND cx.max_id = c.id
+
+			) AS calificacion_proveedor ON 02usuarios.id = calificacion_proveedor.idRelacion
+
 		';
+		
+		
 		// ─────────────────────────────────────────────────────────────────────
 
-		$sWhere3 .= " ORDER BY nommbrerazon ASC";
+		$sWhere3 .= " ORDER BY usuario ASC";
 
 		$sql  = "SELECT DISTINCT $campos, 02usuarios.id AS IDDDDDD FROM $tables $sWhere $sWhere3 LIMIT $offset, $per_page";
 		$sql1 = "SELECT DISTINCT 02usuarios.id FROM $tables $sWhere $sWhere3";

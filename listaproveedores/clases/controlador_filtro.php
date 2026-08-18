@@ -164,7 +164,27 @@ if ($action == "ajax") {
     .bandera-tercera-opcion { background:#ffb6c1; color:#000; }
 
     .bandera-vetado { background:#dc3545; color:#fff; }
+.calificacion-proveedor { display:inline-flex; align-items:center; justify-content:center; min-width:38px; min-height:30px; padding:4px 9px; border-radius:15px; border:1px solid rgba(0,0,0,.18); font-weight:bold; }
 
+
+
+	.calificacion-baja { background:#f5a9a9; color:#721c24; }
+
+
+
+	.calificacion-media { background:#f6cece; color:#6b4d00; }
+
+
+
+	.calificacion-alta { background:#a9f5e1; color:#075c48; }
+
+
+
+	.calificacion-excelente { background:#04b486; color:#fff; }
+
+
+
+	.calificacion-sin-registro { background:#fff; color:#777; border-color:#aaa; font-size:11px; white-space:nowrap; }
 </style>
 <div style="max-height: 600px; overflow-y: auto;">
 <table class="table table-striped table-bordered" >	
@@ -173,7 +193,9 @@ if ($action == "ajax") {
             <th style="background:#c9e8e8"></th>
             <th style="background:#c9e8e8">#</th>
             <th style="background:#c9e8e8"></th>
-			    <th style="background:#c9e8e8;text-align:center">EVALUACIÓN</th>
+			    <th style="background:#c9e8e8;text-align:center">CLASIFICACIÓN</th>
+				<th style="background:#c9e8e8;text-align:center">CALIFICACIÓN</th>
+
 
 
          <?php 
@@ -216,13 +238,13 @@ if ($action == "ajax") {
             <td style="background:#c9e8e8"></td>
 			        <td style="background:#c9e8e8;text-align:center">
 
-                <label for="filtro_evaluacion" style="display:block;font-size:11px;font-weight:bold">FILTRAR POR EVALUACIÓN</label>
+                <label for="filtro_evaluacion" style="display:block;font-size:11px;font-weight:bold">FILTRAR POR CLASIFICACIÓN</label>
 
-                <select id="filtro_evaluacion" class="form-select" onchange="load(1);" title="FILTRAR POR EVALUACIÓN">
+                <select id="filtro_evaluacion" class="form-select" onchange="load(1);" title="FILTRAR POR CLASIFICACIÓN">
 
                     <option value="">TODOS</option>
 
-                    <option value="NO_EVALUADO" style="background:#fff;color:#000" <?php echo $filtro_evaluacion === 'NO_EVALUADO' ? 'selected' : ''; ?>>⚑ BLANCO - NO EVALUADO</option>
+                    <option value="NO_EVALUADO" style="background:#fff;color:#000" <?php echo $filtro_evaluacion === 'NO_EVALUADO' ? 'selected' : ''; ?>>⚑ BLANCO - NO CLASIFICADO</option>
 
                     <option value="DE_CASA" style="background:#28a745;color:#fff" <?php echo $filtro_evaluacion === 'DE_CASA' ? 'selected' : ''; ?>>⚑ VERDE - DE CASA</option>
 
@@ -235,6 +257,8 @@ if ($action == "ajax") {
                 </select>
 
             </td>
+			<td style="background:#c9e8e8"></td>
+
 
             <?php /*inicia copiar y pegar iniciaA4*/ ?>
             <!--<hr/><H1>HTML FILTRO E INPUT .PHP A4</H1><BR/>-->
@@ -297,7 +321,7 @@ echo $convenio; ?>">--></td>
     ?>
         <tbody>
             <tr>
-                <td colspan="21" style="text-align:center; padding:30px; color:#888;">
+                <td colspan="22" style="text-align:center; padding:30px; color:#888;">
                     <div style="font-size:16px; margin-bottom:8px;">🔍 Sin resultados</div>
                     <div style="font-size:13px;">No se encontraron proveedores con los filtros aplicados. Intenta con otros términos de búsqueda.</div>
                 </td>
@@ -359,7 +383,7 @@ echo $convenio; ?>">--></td>
 
                     ? $presentacionesEvaluacion[$evaluacion]
 
-                    : array('bandera-no-evaluado', 'NO EVALUADO');
+                    : array('bandera-no-evaluado', 'SIN CLASIFICAR');
 
             ?>
 
@@ -374,6 +398,51 @@ echo $convenio; ?>">--></td>
                 </span>
 
             </td>
+<?php
+
+				$calificacion = isset($row['ULTIMA_CALIFICACION']) ? trim((string)$row['ULTIMA_CALIFICACION']) : '';
+
+				$claseCalificacion = 'calificacion-sin-registro';
+
+				$textoCalificacion = 'SIN REGISTRO';
+
+				if ($calificacion !== '' && is_numeric($calificacion)) {
+
+					$valorCalificacion = (int)$calificacion;
+
+					$textoCalificacion = (string)$valorCalificacion;
+
+					if ($valorCalificacion <= 3) {
+
+						$claseCalificacion = 'calificacion-baja';
+
+					} elseif ($valorCalificacion <= 5) {
+
+						$claseCalificacion = 'calificacion-media';
+
+					} elseif ($valorCalificacion <= 8) {
+
+						$claseCalificacion = 'calificacion-alta';
+
+					} else {
+
+						$claseCalificacion = 'calificacion-excelente';
+
+					}
+
+				}
+
+			?>
+
+			<td style="text-align:center">
+
+				<span class="calificacion-proveedor <?php echo $claseCalificacion; ?>" title="Última calificación registrada">
+
+					<?php echo htmlspecialchars($textoCalificacion, ENT_QUOTES, 'UTF-8'); ?>
+
+				</span>
+
+			</td>
 
         
             <?php if($database->plantilla_filtro($nombreTabla,"nommbrerazon",$altaeventos,$DEPARTAMENTO)=="si"){ ?> <td style="text-align:center;">
